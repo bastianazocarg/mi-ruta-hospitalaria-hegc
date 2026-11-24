@@ -545,6 +545,45 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.25);
         }
 
+
+        /* Estructura exacta zona amarilla Piso 3 (Caballo arriba izq, Tractor derecha, Volantín abajo) */
+        .p3-yellow-grid {
+            display: grid;
+            grid-template-columns: 1.4fr 1fr;
+            grid-template-rows: auto auto;
+            gap: 6px;
+        }
+        .p3-caballo {
+            grid-column: 1;
+            grid-row: 1;
+        }
+        .p3-tractor {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+        }
+        .p3-volantin {
+            grid-column: 1;
+            grid-row: 2;
+        }
+        .corridor-col {
+            background-color: var(--hegc-dark);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 3px;
+            color: white;
+            position: relative;
+        }
+        .corridor-group {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            width: 100%;
+        }
+
         /* Colores planos de bloques */
         .bg-purple { background-color: var(--hegc-purple); }
         .bg-blue   { background-color: var(--hegc-blue); }
@@ -782,15 +821,20 @@
 </div>
 
 <script>
-    // Estructura exacta de los mapas reales por piso (Pisos 1, 2, 3, 4 y 5)
+    // Estructura exacta de los mapas reales por piso (Pisos 1, 2, 3, 4 y 5) fiel a señalética HEGC
     const mapasPisos = {
         1: {
             titulo: "PISO 1<br>ZONA AUSTRAL",
             colorHex: "#5B2C6F",
             corridor: `
-                <div class="corridor-icon" title="Ascensor Norte">🛗</div>
+                <div class="corridor-group">
+                    <div class="corridor-icon" title="Ascensor Norte">🛗</div>
+                </div>
                 <div class="corridor-label">PASILLO PRINCIPAL</div>
-                <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                <div class="corridor-group">
+                    <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                    <div class="corridor-icon" title="Baños / Escaleras">🚻</div>
+                </div>
             `,
             bloques: [
                 {
@@ -817,9 +861,15 @@
             titulo: "PISO 2<br>ENTRADA PRINCIPAL",
             colorHex: "#E67E22",
             corridor: `
-                <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                <div class="corridor-group">
+                    <div class="corridor-icon" title="Ascensor Norte">🛗</div>
+                    <div style="font-size:0.52rem; font-weight:800; text-align:center; color:#93C5FD;">ENTRADA<br>PPAL.</div>
+                </div>
                 <div class="corridor-label">PASILLO PRINCIPAL</div>
-                <div class="corridor-icon" title="Ascensor Sur">🛗</div>
+                <div class="corridor-group">
+                    <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                    <div class="corridor-icon" title="Baños">🚻</div>
+                </div>
             `,
             bloques: [
                 { id: "p2-hdia", name: "Hospital de Día", icon: "🌺", color: "bg-blue" },
@@ -852,9 +902,16 @@
             titulo: "PISO 3<br>ZONA CENTRAL",
             colorHex: "#1B5E91",
             corridor: `
-                <div class="corridor-icon" title="Ascensor Norte">🛗</div>
-                <div class="corridor-label">PASILLO PRINCIPAL</div>
-                <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                <div class="corridor-group">
+                    <div style="height:28px;"></div>
+                    <div class="corridor-icon" title="Ascensor Norte (altura Zanahoria)">🛗</div>
+                </div>
+                <div class="corridor-label" style="font-size:0.56rem;">PASILLO PRINCIPAL</div>
+                <div class="corridor-group">
+                    <div class="elevator-ref" title="Ascensores Principales (altura Corta Estadía)">🛗<br>ASC.<br>PPALES.</div>
+                    <div style="height:36px;"></div>
+                    <div class="corridor-icon" title="Baños">🚻</div>
+                </div>
             `,
             bloques: [
                 { id: "p3-uva", name: "Consultas y Proc. (Nefro / Uro / Cir. Inf)", icon: "🍇", color: "bg-blue" },
@@ -862,10 +919,11 @@
                 { id: "p3-gallo", name: "Consultas y Proc. (Pediatría / ORL / Dental)", icon: "🐓", color: "bg-blue" },
                 { id: "p3-corta", name: "Corta Estadía", icon: "🐑", color: "bg-orange" },
                 {
-                    split: true,
+                    p3Yellow: true,
                     items: [
-                        { id: "p3-anat", name: "Anat. Patológica / Pabellones", icon: "🐎", color: "bg-yellow" },
-                        { id: "p3-cma", name: "Cirugía Mayor Ambulatoria", icon: "🚜", color: "bg-yellow" }
+                        { id: "p3-anat", name: "Anat. Patológica y Esterilización", icon: "🐎", color: "bg-yellow", areaClass: "p3-caballo" },
+                        { id: "p3-cma", name: "Cirugía Mayor Ambulatoria", icon: "🚜", color: "bg-yellow", areaClass: "p3-tractor" },
+                        { id: "p3-pab", name: "Pabellones", icon: "🪁", color: "bg-yellow", areaClass: "p3-volantin" }
                     ]
                 }
             ]
@@ -874,9 +932,14 @@
             titulo: "PISO 4<br>ZONA COSTERA",
             colorHex: "#1B5E91",
             corridor: `
-                <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                <div class="corridor-group">
+                    <div class="corridor-icon" title="Ascensor Norte">🛗</div>
+                </div>
                 <div class="corridor-label">PASILLO PRINCIPAL</div>
-                <div class="corridor-icon" title="Ascensor Sur">🛗</div>
+                <div class="corridor-group">
+                    <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                    <div class="corridor-icon" title="Baños">🚻</div>
+                </div>
             `,
             bloques: [
                 { id: "p4-dir", name: "Dirección y Administración", icon: "🏰", color: "bg-green" },
@@ -895,9 +958,13 @@
             titulo: "PISO 5<br>NORTE GRANDE",
             colorHex: "#E67E22",
             corridor: `
-                <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                <div class="corridor-group">
+                    <div class="elevator-ref">🛗<br>ASC.<br>PPALES.</div>
+                </div>
                 <div class="corridor-label">PASILLO PRINCIPAL</div>
-                <div class="corridor-icon" title="Baños / Mudadores">🚻</div>
+                <div class="corridor-group">
+                    <div class="corridor-icon" title="Baños / Mudadores">🚻</div>
+                </div>
             `,
             bloques: [
                 { id: "p5-alpaca", name: "Habitaciones Alpaca", icon: "🦙", color: "bg-orange" },
@@ -975,8 +1042,8 @@
                         "Exámenes cardiológicos anteriores (si tiene)."
                     ],
                     ruta: [
-                        "1. Busque los Ascensores Principales como punto de inicio y suba al Piso 3.",
-                        "2. Al salir al Pasillo Principal, siga las indicaciones hacia el sector medio-alto de color AZUL.",
+                        "1. Busque los Ascensores Principales como punto de inicio y suba al Piso 3 (saldrá frente a Corta Estadía).",
+                        "2. Avance por el Pasillo Principal hacia el sector medio-alto de color AZUL (pasando el bloque del Gallo).",
                         "3. Identifique el ícono de la ZANAHORIA (Consultas) y regístrese en recepción."
                     ]
                 }
@@ -1156,7 +1223,21 @@
         blocksContainer.innerHTML = "";
 
         pisoInfo.bloques.forEach(b => {
-            if (b.split) {
+            if (b.p3Yellow) {
+                const yDiv = document.createElement('div');
+                yDiv.className = "p3-yellow-grid";
+                b.items.forEach(sub => {
+                    const isTarget = sub.id === p.targetBlockId;
+                    yDiv.innerHTML += `
+                        <div class="map-block ${sub.color} ${sub.areaClass || ''} ${isTarget ? 'target' : ''}">
+                            ${isTarget ? '<span class="target-pin">AQUÍ VAS</span>' : ''}
+                            <span class="blk-icon">${sub.icon}</span>
+                            <span class="blk-name">${sub.name}</span>
+                        </div>
+                    `;
+                });
+                blocksContainer.appendChild(yDiv);
+            } else if (b.split) {
                 const rowDiv = document.createElement('div');
                 rowDiv.className = "map-row-split";
                 b.items.forEach(sub => {
