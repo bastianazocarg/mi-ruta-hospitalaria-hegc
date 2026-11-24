@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mi Ruta Hospitalaria — HEGC</title>
+    <style>
+        :root {
+            --primary: #0F4C81;
+            --primary-light: #1C6BA0;
+            --bg: #F1F5F9;
+            --card-bg: #FFFFFF;
+            --text-dark: #0F172A;
+            --text-muted: #475569;
+            --border: #E2E8F0;
+            
+            /* Colores institucionales planos HEGC */
+            --hegc-dark: #1E293B;
+            --hegc-purple: #5B2C6F;
+            --hegc-blue: #1B5E91;
+            --hegc-orange: #E67E22;
+            --hegc-green: #117A65;
+            --hegc-red: #C0392B;
+            --hegc-yellow: #E5B53A;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        }
+
+        body {
+            background-color: #CBD5E1;
+            color: var(--text-dark);
+            display: flex;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .mobile-container {
+            width: 100%;
+            max-width: 440px;
+            background-color: var(--bg);
+            min-height: 100vh;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background: var(--hegc-dark);
+            color: white;
+            padding: 16px 20px;
+            border-bottom: 4px solid var(--hegc-blue);
+        }
+
+        .header-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 4px;
+        }
+
+        .badge-demo {
+            background-color: rgba(255, 255, 255, 0.15);
+            font-size: 0.68rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+            letter-spacing: 0.4px;
+        }
+
+        header h1 {
+            font-size: 1.3rem;
+            font-weight: 700;
+        }
+
+        header p {
+            font-size: 0.82rem;
+            color: #CBD5E1;
+        }
+
+        main {
+            padding: 16px;
+            flex: 1;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--hegc-dark);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-group {
+            margin-bottom: 14px;
+        }
+
+        label {
+            display: block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-dark);
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 14px;
+            border: 1.5px solid #CBD5E1;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #FFFFFF;
+            color: var(--text-dark);
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--hegc-blue);
+        }
+
+        .helper-text {
+            font-size: 0.76rem;
+            color: var(--text-muted);
+            margin-top: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 13px;
+            border: none;
+            border-radius: 10px;
+            font-size: 0.98rem;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:hover { opacity: 0.92; }
+
+        .btn-primary {
+            background-color: var(--hegc-blue);
+            color: white;
+        }
+
+        .btn-outline {
+            background-color: white;
+            border: 1.5px solid var(--hegc-dark);
+            color: var(--hegc-dark);
+            margin-top: 8px;
+        }
+
+        /* Botones de prueba por piso */
+        .demo-box {
+            background-color: #F8FAFC;
+            border: 1px dashed #94A3B8;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 16px;
+        }
+
+        .demo-box p {
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .demo-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .demo-chip {
+            background: white;
+            color: var(--text-dark);
+            font-size: 0.76rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            border: 1px solid #CBD5E1;
+            font-weight: 600;
+            text-align: left;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .demo-chip:hover {
+            background: #EFF6FF;
+            border-color: var(--hegc-blue);
+        }
+
+        .demo-chip span.piso-lbl {
+            font-size: 0.68rem;
+            font-weight: 800;
+            color: var(--hegc-blue);
+        }
+
+        .hidden { display: none !important; }
+
+        .patient-banner {
+            background: white;
+            border-left: 5px solid var(--hegc-blue);
+            padding: 12px 14px;
+            border-radius: 10px;
+            margin-bottom: 14px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.04);
+        }
+
+        .patient-banner h2 {
+            font-size: 1rem;
+            color: var(--text-dark);
+        }
+
+        .patient-banner span {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* Tarjeta de cita simplificada */
+        .exam-card {
+            cursor: pointer;
+            transition: transform 0.12s;
+            border-left: 6px solid var(--hegc-blue);
+        }
+
+        .exam-card:active { transform: scale(0.99); }
+
+        .exam-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .exam-title {
+            font-weight: 700;
+            font-size: 1.02rem;
+            color: var(--text-dark);
+        }
+
+        .piso-pill {
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 4px 9px;
+            border-radius: 6px;
+            color: white;
+            white-space: nowrap;
+        }
+
+        .exam-meta {
+            font-size: 0.86rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        /* Bloques protagonistas: Indicaciones y Documentación */
+        .prep-highlight {
+            background-color: #FEF3C7;
+            border: 1.5px solid #F59E0B;
+            border-left: 6px solid #D97706;
+            color: #78350F;
+            padding: 14px;
+            border-radius: 10px;
+            margin: 12px 0;
+        }
+
+        .prep-highlight.ok {
+            background-color: #DCFCE7;
+            border-color: #22C55E;
+            border-left-color: #15803D;
+            color: #14532D;
+        }
+
+        .prep-highlight-title {
+            font-weight: 800;
+            font-size: 0.92rem;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            text-transform: uppercase;
+        }
+
+        .prep-highlight p {
+            font-size: 0.9rem;
+            line-height: 1.45;
+            font-weight: 500;
+        }
+
+        .docs-box {
+            background: #F8FAFC;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin-top: 10px;
+        }
+
+        .docs-box-title {
+            font-weight: 800;
+            font-size: 0.88rem;
+            color: var(--hegc-dark);
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .doc-list {
+            list-style: none;
+        }
+
+        .doc-list li {
+            font-size: 0.88rem;
+            padding: 6px 0;
+            border-bottom: 1px solid #E2E8F0;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+            line-height: 1.35;
+        }
+
+        .doc-list li:last-child { border-bottom: none; padding-bottom: 0; }
+
+        /* --- MAPA ESTRUCTURAL FIEL A SEÑALÉTICA HEGC --- */
+        .hegc-board {
+            background-color: var(--hegc-dark);
+            border-radius: 14px;
+            padding: 12px;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .hegc-board-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 0 4px;
+        }
+
+        .hegc-floor-badge {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hegc-floor-num {
+            font-size: 2rem;
+            font-weight: 900;
+            line-height: 1;
+            color: white;
+        }
+
+        .hegc-floor-txt {
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            line-height: 1.2;
+            color: #E2E8F0;
+        }
+
+        .hegc-map-frame {
+            background: #FFFFFF;
+            border-radius: 10px;
+            padding: 8px;
+            display: grid;
+            grid-template-columns: 22px 1fr 44px;
+            gap: 6px;
+            color: var(--text-dark);
+            position: relative;
+        }
+
+        .staff-strip {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            text-align: center;
+            font-size: 0.58rem;
+            font-weight: 800;
+            color: #64748B;
+            letter-spacing: 0.8px;
+            border-right: 1.5px solid #CBD5E1;
+            padding-right: 2px;
+        }
+
+        .blocks-col {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .map-row-split {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 6px;
+        }
+
+        .map-block {
+            border-radius: 6px;
+            padding: 8px 6px;
+            text-align: center;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 46px;
+            opacity: 0.35;
+            transition: all 0.25s;
+            position: relative;
+        }
+
+        .map-block.target {
+            opacity: 1;
+            transform: scale(1.03);
+            box-shadow: 0 0 0 3px #FACC15, 0 6px 14px rgba(0,0,0,0.35);
+            z-index: 2;
+        }
+
+        .map-block .blk-icon {
+            font-size: 1.25rem;
+            margin-bottom: 2px;
+        }
+
+        .map-block .blk-name {
+            font-size: 0.65rem;
+            font-weight: 800;
+            line-height: 1.15;
+            text-transform: uppercase;
+        }
+
+        .target-pin {
+            position: absolute;
+            top: -8px;
+            right: -4px;
+            background: #FACC15;
+            color: #0F172A;
+            font-size: 0.6rem;
+            font-weight: 900;
+            padding: 2px 6px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .corridor-col {
+            background-color: var(--hegc-dark);
+            border-radius: 6px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 3px;
+            color: white;
+            position: relative;
+        }
+
+        .corridor-label {
+            writing-mode: vertical-rl;
+            transform: rotate(180deg);
+            font-size: 0.62rem;
+            font-weight: 800;
+            letter-spacing: 1px;
+            color: #CBD5E1;
+        }
+
+        .corridor-icon {
+            background: white;
+            color: var(--hegc-dark);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .you-are-here {
+            background: #DC2626;
+            color: white;
+            font-size: 0.52rem;
+            font-weight: 900;
+            padding: 3px 4px;
+            border-radius: 6px;
+            text-align: center;
+            line-height: 1.05;
+        }
+
+        /* Colores planos de bloques */
+        .bg-purple { background-color: var(--hegc-purple); }
+        .bg-blue   { background-color: var(--hegc-blue); }
+        .bg-orange { background-color: var(--hegc-orange); }
+        .bg-green  { background-color: var(--hegc-green); }
+        .bg-red    { background-color: var(--hegc-red); }
+        .bg-yellow { background-color: var(--hegc-yellow); color: #1E293B; }
+
+        .route-steps {
+            background: white;
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 10px;
+            color: var(--text-dark);
+        }
+
+        .route-steps-title {
+            font-size: 0.82rem;
+            font-weight: 800;
+            color: var(--hegc-dark);
+            margin-bottom: 6px;
+            text-transform: uppercase;
+        }
+
+        .route-step-item {
+            font-size: 0.84rem;
+            padding: 5px 0;
+            border-bottom: 1px solid #F1F5F9;
+            line-height: 1.35;
+        }
+
+        .route-step-item:last-child { border-bottom: none; padding-bottom: 0; }
+
+        .rating-group {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 10px;
+        }
+
+        .rate-btn {
+            background: #F1F5F9;
+            border: 1px solid #CBD5E1;
+            border-radius: 10px;
+            padding: 8px;
+            font-size: 1.25rem;
+            cursor: pointer;
+            flex: 1;
+            margin: 0 3px;
+        }
+
+        .rate-btn.selected {
+            background: #DBEAFE;
+            border-color: var(--hegc-blue);
+        }
+
+        .error-msg {
+            background: #FEE2E2;
+            color: #991B1B;
+            padding: 10px 12px;
+            border-radius: 8px;
+            font-size: 0.84rem;
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        footer {
+            text-align: center;
+            padding: 12px;
+            font-size: 0.74rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="mobile-container">
+    <header>
+        <div class="header-top">
+            <span style="font-size: 0.78rem; font-weight: 700;">🏥 HEGC — Orientación Ambulatoria</span>
+            <span class="badge-demo">PROTOTIPO</span>
+        </div>
+        <h1>Mi Ruta Hospitalaria</h1>
+        <p>Indicaciones previas, documentos y mapa por piso</p>
+    </header>
+
+    <main>
+        <!-- VISTA 1: INGRESO CON RUT + FECHA DE NACIMIENTO -->
+        <section id="view-login">
+            <div class="card">
+                <div class="card-title">🔍 Consulta tu atención</div>
+                <p style="font-size: 0.86rem; color: var(--text-muted); margin-bottom: 14px;">
+                    Ingresa el RUT y la fecha de nacimiento del paciente para revisar su preparación previa y cómo llegar al sector.
+                </p>
+
+                <div id="login-error" class="error-msg hidden"></div>
+
+                <div class="form-group">
+                    <label for="rut-input">RUT del Paciente</label>
+                    <input type="text" id="rut-input" placeholder="Ej: 24.567.890-1" maxlength="12">
+                </div>
+
+                <div class="form-group">
+                    <label for="dob-input">Fecha de Nacimiento del Paciente</label>
+                    <input type="date" id="dob-input">
+                    <div class="helper-text">🔒 Validación simple para acompañantes, sin crear cuenta.</div>
+                </div>
+
+                <button class="btn btn-primary" onclick="consultarPaciente()">Ver Indicaciones y Ruta</button>
+
+                <div class="demo-box">
+                    <p>🧪 Ejemplos por piso (clic para probar):</p>
+                    <div class="demo-grid">
+                        <button class="demo-chip" onclick="cargarDemo('24.567.890-1', '2019-05-14')">
+                            <span class="piso-lbl">PISO 1 • FOCA 🦭</span>
+                            <span>Ecografía Abdominal</span>
+                        </button>
+                        <button class="demo-chip" onclick="cargarDemo('25.111.222-3', '2021-08-22')">
+                            <span class="piso-lbl">PISO 2 • PICAFLOR 🐦</span>
+                            <span>Toma de Muestras</span>
+                        </button>
+                        <button class="demo-chip" onclick="cargarDemo('23.888.999-4', '2017-03-10')">
+                            <span class="piso-lbl">PISO 3 • ZANAHORIA 🥕</span>
+                            <span>Cardiología Infantil</span>
+                        </button>
+                        <button class="demo-chip" onclick="cargarDemo('22.444.555-6', '2015-11-30')">
+                            <span class="piso-lbl">PISO 4 • ESTRELLA ⭐</span>
+                            <span>Oncología Ambulatoria</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VISTA 2: RESUMEN DE ATENCIONES -->
+        <section id="view-list" class="hidden">
+            <div class="patient-banner">
+                <h2 id="patient-name">Paciente: Sofía Rojas</h2>
+                <span id="patient-rut">RUT: 24.567.890-1</span>
+            </div>
+
+            <p style="font-size: 0.84rem; color: var(--text-muted); margin-bottom: 10px; font-weight: 700;">
+                Toca tu prestación para ver preparación y mapa:
+            </p>
+
+            <div id="exams-container"></div>
+
+            <button class="btn btn-outline" onclick="volverInicio()">← Consultar otro paciente</button>
+        </section>
+
+        <!-- VISTA 3: DETALLE ENFOCADO EN PREPARACIÓN, DOCUMENTOS Y MAPA REAL -->
+        <section id="view-detail" class="hidden">
+            <button class="btn btn-outline" style="margin-top:0; margin-bottom:12px; padding:9px;" onclick="volverLista()">
+                ← Volver
+            </button>
+
+            <!-- Datos esenciales de la hora -->
+            <div class="card">
+                <div class="exam-header">
+                    <div class="exam-title" id="det-nombre">Ecografía Abdominal</div>
+                    <span class="piso-pill" id="det-piso-pill">PISO 1</span>
+                </div>
+                <div class="exam-meta" id="det-meta"></div>
+
+                <!-- PROTAGONISTA 1: INDICACIONES PREVIAS -->
+                <div class="prep-highlight" id="det-prep-box">
+                    <div class="prep-highlight-title" id="det-prep-title">⚠️ PREPARACIÓN OBLIGATORIA</div>
+                    <p id="det-prep-text"></p>
+                </div>
+
+                <!-- PROTAGONISTA 2: DOCUMENTACIÓN NECESARIA -->
+                <div class="docs-box">
+                    <div class="docs-box-title">📄 Documentos que debes traer</div>
+                    <ul class="doc-list" id="det-docs"></ul>
+                </div>
+            </div>
+
+            <!-- PROTAGONISTA 3: MAPA ESTRUCTURAL HEGC + GUÍA -->
+            <div class="card">
+                <div class="card-title">🧭 ¿Cómo llegar a tu sector?</div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);" id="det-ubicacion-resumen"></p>
+
+                <div class="hegc-board">
+                    <div class="hegc-board-header">
+                        <div class="hegc-floor-badge">
+                            <span class="hegc-floor-num" id="board-piso-num">1</span>
+                            <div class="hegc-floor-txt" id="board-piso-desc">PISO 1<br>ZONA AUSTRAL</div>
+                        </div>
+                        <span style="font-size: 0.7rem; background: rgba(255,255,255,0.12); padding: 4px 8px; border-radius: 6px; font-weight: 700;">
+                            PLANO OFICIAL HEGC
+                        </span>
+                    </div>
+
+                    <div class="hegc-map-frame">
+                        <div class="staff-strip">ÁREA FUNCIONARIOS</div>
+                        <div class="blocks-col" id="board-blocks"></div>
+                        <div class="corridor-col" id="board-corridor"></div>
+                    </div>
+                </div>
+
+                <div class="route-steps">
+                    <div class="route-steps-title">👣 Paso a paso desde la entrada</div>
+                    <div id="det-ruta-pasos"></div>
+                </div>
+            </div>
+
+            <!-- Encuesta rápida -->
+            <div class="card" style="text-align: center;">
+                <strong style="font-size: 0.88rem; color: var(--hegc-dark);">¿Te quedó clara la preparación y el lugar?</strong>
+                <div class="rating-group">
+                    <button class="rate-btn" onclick="calificar(this)">😞</button>
+                    <button class="rate-btn" onclick="calificar(this)">🙁</button>
+                    <button class="rate-btn" onclick="calificar(this)">😐</button>
+                    <button class="rate-btn" onclick="calificar(this)">🙂</button>
+                    <button class="rate-btn" onclick="calificar(this)">🤩</button>
+                </div>
+                <p id="rating-feedback" class="helper-text hidden" style="color: #15803D; font-weight: 700; margin-top: 8px;">
+                    ¡Gracias por tu evaluación!
+                </p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        Prototipo Demostrativo • Portafolio de Título Informática Biomédica<br>
+        Señalética basada en planos institucionales HEGC
+    </footer>
+</div>
+
+<script>
+    // Estructura exacta de los mapas reales por piso (Pisos 1, 2, 3 y 4)
+    const mapasPisos = {
+        1: {
+            titulo: "PISO 1<br>ZONA AUSTRAL",
+            colorHex: "#5B2C6F",
+            corridor: `
+                <div class="corridor-icon" title="Ascensor Norte">🛗</div>
+                <div class="corridor-label">PASILLO PRINCIPAL</div>
+                <div class="you-are-here">USTED<br>ESTÁ<br>AQUÍ</div>
+                <div class="corridor-icon" title="Ascensor Sur">🛗</div>
+            `,
+            bloques: [
+                {
+                    split: true,
+                    items: [
+                        { id: "p1-anat", name: "Anatomía Patológica", icon: "🦥", color: "bg-purple" },
+                        { id: "p1-arch", name: "Archivo y Central Dist.", icon: "🦌", color: "bg-green" }
+                    ]
+                },
+                { id: "p1-mant", name: "Mantención (Gaviota) • Vestidores", icon: "🕊️", color: "bg-green" },
+                { id: "p1-sedile", name: "Alimentación y SEDILE", icon: "🐋", color: "bg-green" },
+                {
+                    split: true,
+                    items: [
+                        { id: "p1-casino", name: "Casino", icon: "🍴", color: "bg-green" },
+                        { id: "p1-hemo", name: "Hemodiálisis", icon: "🐧", color: "bg-purple" }
+                    ]
+                },
+                { id: "p1-imag", name: "Imagenología (Sector Foca)", icon: "🦭", color: "bg-purple" },
+                { id: "p1-urg", name: "Unidad de Emergencia", icon: "🐳", color: "bg-red" }
+            ]
+        },
+        2: {
+            titulo: "PISO 2<br>ENTRADA PRINCIPAL",
+            colorHex: "#E67E22",
+            corridor: `
+                <div class="corridor-icon">🛗</div>
+                <div class="you-are-here" style="background:#0F4C81;">ENTRADA<br>PPAL.</div>
+                <div class="corridor-label">PASILLO PRINCIPAL</div>
+                <div class="corridor-icon">🛗</div>
+            `,
+            bloques: [
+                { id: "p2-hdia", name: "Hospital de Día", icon: "🌺", color: "bg-blue" },
+                { id: "p2-proc", name: "Procedimientos", icon: "🦌", color: "bg-blue" },
+                {
+                    split: true,
+                    items: [
+                        { id: "p2-medfis", name: "Medicina Física y Rehab.", icon: "🌲", color: "bg-blue" },
+                        { id: "p2-trauma", name: "Traumatología", icon: "🌲", color: "bg-blue" }
+                    ]
+                },
+                { id: "p2-farm", name: "Farmacia, Laboratorio y Med. Transfusional", icon: "🌋", color: "bg-orange" },
+                {
+                    split: true,
+                    items: [
+                        { id: "p2-hab1", name: "Habitaciones Cóndor", icon: "🦅", color: "bg-orange" },
+                        { id: "p2-adm", name: "Admisión", icon: "🌳", color: "bg-orange" }
+                    ]
+                },
+                {
+                    split: true,
+                    items: [
+                        { id: "p2-hab2", name: "Habitaciones Gorrito Lana", icon: "🧶", color: "bg-orange" },
+                        { id: "p2-muestras", name: "Toma de Muestras", icon: "🐦", color: "bg-orange" }
+                    ]
+                }
+            ]
+        },
+        3: {
+            titulo: "PISO 3<br>ZONA CENTRAL",
+            colorHex: "#1B5E91",
+            corridor: `
+                <div class="corridor-icon">🛗</div>
+                <div class="corridor-label">PASILLO PRINCIPAL</div>
+                <div class="you-are-here">USTED<br>ESTÁ<br>AQUÍ</div>
+                <div class="corridor-icon">🛗</div>
+            `,
+            bloques: [
+                { id: "p3-uva", name: "Consultas y Proc. (Nefro / Uro / Cir. Inf)", icon: "🍇", color: "bg-blue" },
+                { id: "p3-zanahoria", name: "Consultas (Cardio / Neuro / Gastro / Oftalmo)", icon: "🥕", color: "bg-blue" },
+                { id: "p3-gallo", name: "Consultas y Proc. (Pediatría / ORL / Dental)", icon: "🐓", color: "bg-blue" },
+                { id: "p3-corta", name: "Corta Estadía", icon: "🐑", color: "bg-orange" },
+                {
+                    split: true,
+                    items: [
+                        { id: "p3-anat", name: "Anat. Patológica / Pabellones", icon: "🐎", color: "bg-yellow" },
+                        { id: "p3-cma", name: "Cirugía Mayor Ambulatoria", icon: "🚜", color: "bg-yellow" }
+                    ]
+                }
+            ]
+        },
+        4: {
+            titulo: "PISO 4<br>ZONA COSTERA",
+            colorHex: "#1B5E91",
+            corridor: `
+                <div class="you-are-here">USTED<br>ESTÁ<br>AQUÍ</div>
+                <div class="corridor-icon">🛗</div>
+                <div class="corridor-label">PASILLO PRINCIPAL</div>
+                <div class="corridor-icon">🛗</div>
+            `,
+            bloques: [
+                { id: "p4-dir", name: "Dirección y Administración", icon: "🏰", color: "bg-green" },
+                {
+                    split: true,
+                    items: [
+                        { id: "p4-col", name: "Colegios", icon: "⛵", color: "bg-blue" },
+                        { id: "p4-onco", name: "Oncología Ambulatoria", icon: "⭐", color: "bg-blue" }
+                    ]
+                },
+                { id: "p4-hab", name: "Habitaciones Flor Tipanie", icon: "🌸", color: "bg-orange" },
+                { id: "p4-upc", name: "UPC (Unidad Paciente Crítico)", icon: "🐟", color: "bg-red" }
+            ]
+        }
+    };
+
+    // 4 Casos de ejemplo (uno por cada piso ambulatorio: Piso 1, 2, 3 y 4)
+    const pacientesDB = {
+        "24.567.890-1": {
+            dob: "2019-05-14",
+            nombre: "Sofía Rojas Morales (7 años)",
+            prestaciones: [
+                {
+                    nombre: "Ecografía Abdominal Pediátrica",
+                    fecha: "Jueves 26 Nov, 2026 • 09:30 hrs",
+                    piso: 1,
+                    targetBlockId: "p1-imag",
+                    sectorLabel: "Sector Foca (Color Morado) — Imagenología",
+                    requierePrep: true,
+                    preparacion: "AYUNO ESTRICTO DE 6 HORAS: No comer alimentos sólidos, leche ni jugos desde las 03:30 hrs. Solo puede tomar pequeños sorbos de agua pura.",
+                    documentos: [
+                        "Orden médica original (impresa o digital).",
+                        "Cédula de identidad del paciente pediátrico."
+                    ],
+                    ruta: [
+                        "1. Ingresa por Entrada Principal (Piso 2) y baja al Piso 1 por los ascensores.",
+                        "2. Al salir del ascensor en Piso 1, gira hacia tu izquierda por el Pasillo Principal.",
+                        "3. Ubica el sector color MORADO con el ícono de la FOCA (Imagenología) y anuncia tu llegada en mesón."
+                    ]
+                }
+            ]
+        },
+        "25.111.222-3": {
+            dob: "2021-08-22",
+            nombre: "Mateo Pérez Silva (5 años)",
+            prestaciones: [
+                {
+                    nombre: "Toma de Muestras (Exámenes de Sangre)",
+                    fecha: "Viernes 27 Nov, 2026 • 08:15 hrs",
+                    piso: 2,
+                    targetBlockId: "p2-muestras",
+                    sectorLabel: "Sector Picaflor (Color Naranjo) — Toma de Muestras",
+                    requierePrep: true,
+                    preparacion: "AYUNO DE 8 HORAS: Última comida a las 00:15 hrs. Trae una colación en el bolso para darle inmediatamente después del examen.",
+                    documentos: [
+                        "Orden de exámenes emitida por el médico.",
+                        "Cédula de identidad o certificado de nacimiento."
+                    ],
+                    ruta: [
+                        "1. Ingresa por la Entrada Principal (ubicada en este mismo Piso 2).",
+                        "2. Avanza por el Pasillo Principal hacia el fondo (pasando Admisión).",
+                        "3. Al final del corredor naranjo verás el ícono del PICAFLOR (Toma de Muestras). Saca número preferencial pediátrico."
+                    ]
+                }
+            ]
+        },
+        "23.888.999-4": {
+            dob: "2017-03-10",
+            nombre: "Lucas Muñoz Soto (9 años)",
+            prestaciones: [
+                {
+                    nombre: "Consulta Cardiología Infantil + ECG",
+                    fecha: "Lunes 30 Nov, 2026 • 10:45 hrs",
+                    piso: 3,
+                    targetBlockId: "p3-zanahoria",
+                    sectorLabel: "Sector Zanahoria (Color Azul) — Consultas",
+                    requierePrep: false,
+                    preparacion: "SIN AYUNO: El niño puede desayunar normalmente. Acudir con polera holgada y sin cremas corporales en el pecho para facilitar el electrocardiograma.",
+                    documentos: [
+                        "Carnet de control o interconsulta.",
+                        "Cédula de identidad del paciente.",
+                        "Exámenes cardiológicos anteriores (si tiene)."
+                    ],
+                    ruta: [
+                        "1. Sube al Piso 3 mediante los ascensores centrales.",
+                        "2. Al salir al Pasillo Principal, avanza hacia el sector medio-alto de color AZUL.",
+                        "3. Identifica el ícono de la ZANAHORIA (Consultas) y regístrate en el mesón de recepción."
+                    ]
+                }
+            ]
+        },
+        "22.444.555-6": {
+            dob: "2015-11-30",
+            nombre: "Martina González Díaz (11 años)",
+            prestaciones: [
+                {
+                    nombre: "Control Oncología Ambulatoria",
+                    fecha: "Martes 01 Dic, 2026 • 09:00 hrs",
+                    piso: 4,
+                    targetBlockId: "p4-onco",
+                    sectorLabel: "Sector Estrella de Mar (Color Azul) — Oncología Ambulatoria",
+                    requierePrep: true,
+                    preparacion: "USO DE MASCARILLA: Acudir con mascarilla quirúrgica limpia tanto el paciente como su acompañante antes de ingresar a la sala de espera.",
+                    documentos: [
+                        "Cédula de identidad del paciente.",
+                        "Carnet de tratamiento oncológico.",
+                        "Recetario o listado de medicamentos actuales."
+                    ],
+                    ruta: [
+                        "1. Toma los ascensores centrales hasta el Piso 4.",
+                        "2. Avanza por el Pasillo Principal hacia el sector medio de color AZUL.",
+                        "3. Identifica el ícono de la ESTRELLA DE MAR (Oncología Ambulatoria) justo frente al pasillo."
+                    ]
+                }
+            ]
+        }
+    };
+
+    let pacienteActual = null;
+
+    function normalizarRut(rut) {
+        return rut.replace(/\./g, '').trim().toUpperCase();
+    }
+
+    function cargarDemo(rut, dob) {
+        document.getElementById('rut-input').value = rut;
+        document.getElementById('dob-input').value = dob;
+        consultarPaciente();
+    }
+
+    function consultarPaciente() {
+        const rutRaw = document.getElementById('rut-input').value;
+        const dobRaw = document.getElementById('dob-input').value;
+        const errorBox = document.getElementById('login-error');
+
+        errorBox.classList.add('hidden');
+
+        if (!rutRaw || !dobRaw) {
+            errorBox.textContent = "Por favor ingresa el RUT y la fecha de nacimiento del paciente.";
+            errorBox.classList.remove('hidden');
+            return;
+        }
+
+        const rutNorm = normalizarRut(rutRaw);
+        let encontrado = null;
+        let rutFormateado = "";
+
+        for (const [key, val] of Object.entries(pacientesDB)) {
+            if (normalizarRut(key) === rutNorm && val.dob === dobRaw) {
+                encontrado = val;
+                rutFormateado = key;
+                break;
+            }
+        }
+
+        if (!encontrado) {
+            errorBox.textContent = "No encontramos citas con ese RUT y fecha de nacimiento. Prueba con los ejemplos por piso de abajo.";
+            errorBox.classList.remove('hidden');
+            return;
+        }
+
+        pacienteActual = { ...encontrado, rut: rutFormateado };
+        // Si tiene 1 prestación, ir directo o mostrar lista
+        renderLista();
+    }
+
+    function renderLista() {
+        document.getElementById('patient-name').textContent = pacienteActual.nombre;
+        document.getElementById('patient-rut').textContent = `RUT: ${pacienteActual.rut}`;
+
+        const container = document.getElementById('exams-container');
+        container.innerHTML = "";
+
+        pacienteActual.prestaciones.forEach(p => {
+            const pisoInfo = mapasPisos[p.piso];
+            const card = document.createElement('div');
+            card.className = "card exam-card";
+            card.style.borderLeftColor = pisoInfo.colorHex;
+            card.onclick = () => renderDetalle(p);
+            card.innerHTML = `
+                <div class="exam-header">
+                    <div class="exam-title">${p.nombre}</div>
+                    <span class="piso-pill" style="background:${pisoInfo.colorHex}">PISO ${p.piso}</span>
+                </div>
+                <div class="exam-meta">
+                    📅 <strong>${p.fecha}</strong><br>
+                    📍 ${p.sectorLabel}
+                </div>
+                <div style="margin-top:8px; font-size:0.8rem; color:var(--hegc-blue); font-weight:700; text-align:right;">
+                    Abrir indicaciones y mapa →
+                </div>
+            `;
+            container.appendChild(card);
+        });
+
+        document.getElementById('view-login').classList.add('hidden');
+        document.getElementById('view-detail').classList.add('hidden');
+        document.getElementById('view-list').classList.remove('hidden');
+    }
+
+    function renderDetalle(p) {
+        const pisoInfo = mapasPisos[p.piso];
+
+        document.getElementById('det-nombre').textContent = p.nombre;
+        const pill = document.getElementById('det-piso-pill');
+        pill.textContent = `PISO ${p.piso}`;
+        pill.style.backgroundColor = pisoInfo.colorHex;
+
+        document.getElementById('det-meta').innerHTML = `
+            📅 <strong>${p.fecha}</strong><br>
+            📍 <strong>${p.sectorLabel}</strong>
+        `;
+
+        // 1. Indicaciones previas
+        const prepBox = document.getElementById('det-prep-box');
+        const prepTitle = document.getElementById('det-prep-title');
+        if (p.requierePrep) {
+            prepBox.className = "prep-highlight";
+            prepTitle.innerHTML = "⚠️ INDICACIONES PREVIAS OBLIGATORIAS";
+        } else {
+            prepBox.className = "prep-highlight ok";
+            prepTitle.innerHTML = "✅ INDICACIONES PREVIAS";
+        }
+        document.getElementById('det-prep-text').textContent = p.preparacion;
+
+        // 2. Documentación necesaria
+        const docList = document.getElementById('det-docs');
+        docList.innerHTML = p.documentos.map(d => `<li><span>✔️</span> <span>${d}</span></li>`).join('');
+
+        // 3. Mapa estructural del piso
+        document.getElementById('det-ubicacion-resumen').innerHTML = `
+            Dirígete al <strong>Piso ${p.piso}</strong> y busca el bloque identificado como <strong>${p.sectorLabel}</strong>:
+        `;
+        document.getElementById('board-piso-num').textContent = p.piso;
+        document.getElementById('board-piso-desc').innerHTML = pisoInfo.titulo;
+        document.getElementById('board-corridor').innerHTML = pisoInfo.corridor;
+
+        const blocksContainer = document.getElementById('board-blocks');
+        blocksContainer.innerHTML = "";
+
+        pisoInfo.bloques.forEach(b => {
+            if (b.split) {
+                const rowDiv = document.createElement('div');
+                rowDiv.className = "map-row-split";
+                b.items.forEach(sub => {
+                    const isTarget = sub.id === p.targetBlockId;
+                    rowDiv.innerHTML += `
+                        <div class="map-block ${sub.color} ${isTarget ? 'target' : ''}">
+                            ${isTarget ? '<span class="target-pin">AQUÍ VAS</span>' : ''}
+                            <span class="blk-icon">${sub.icon}</span>
+                            <span class="blk-name">${sub.name}</span>
+                        </div>
+                    `;
+                });
+                blocksContainer.appendChild(rowDiv);
+            } else {
+                const isTarget = b.id === p.targetBlockId;
+                blocksContainer.innerHTML += `
+                    <div class="map-block ${b.color} ${isTarget ? 'target' : ''}">
+                        ${isTarget ? '<span class="target-pin">AQUÍ VAS</span>' : ''}
+                        <span class="blk-icon">${b.icon}</span>
+                        <span class="blk-name">${b.name}</span>
+                    </div>
+                `;
+            }
+        });
+
+        // 4. Paso a paso
+        document.getElementById('det-ruta-pasos').innerHTML = p.ruta
+            .map(step => `<div class="route-step-item">${step}</div>`)
+            .join('');
+
+        // Reset encuesta
+        document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
+        document.getElementById('rating-feedback').classList.add('hidden');
+
+        document.getElementById('view-list').classList.add('hidden');
+        document.getElementById('view-detail').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    function calificar(btn) {
+        document.querySelectorAll('.rate-btn').forEach(b => b.classList.remove('selected'));
+        btn.classList.add('selected');
+        document.getElementById('rating-feedback').classList.remove('hidden');
+    }
+
+    function volverLista() {
+        document.getElementById('view-detail').classList.add('hidden');
+        document.getElementById('view-list').classList.remove('hidden');
+    }
+
+    function volverInicio() {
+        document.getElementById('view-list').classList.add('hidden');
+        document.getElementById('view-login').classList.remove('hidden');
+        document.getElementById('rut-input').value = "";
+        document.getElementById('dob-input').value = "";
+    }
+</script>
+
+</body>
+</html>
