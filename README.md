@@ -1,14 +1,14 @@
 # Mi Ruta Hospitalaria — Prototipo Funcional (HEGC)
 
-Prototipo web móvil de consulta y orientación para pacientes pediátricos y sus apoderados en atención ambulatoria del **Hospital Dr. Exequiel González Cortés (HEGC)**.
+Prototipo web móvil de consulta y orientación para pacientes pediátricos y sus acompañantes en atención ambulatoria del **Hospital Dr. Exequiel González Cortés (HEGC)**.
 
-## Características incluidas en este prototipo
-- **Consulta sin cuenta (RF-02):** Acceso mediante RUT del paciente más un segundo factor de verificación liviano (N.º de documento o código de reserva).
-- **Datos ficticios (RNF-04):** Base de datos demostrativa integrada para validación académica sin exposición de datos reales.
-- **Indicaciones y documentación (RF-05, RF-06):** Alertas visuales de preparación previa (ayuno, vestimenta) y checklist de documentos.
-- **Orientación con señalética real (RF-07, RF-08):** Identificación visual por pisos, módulos y sectores temáticos del HEGC (**Sector Foca**, **Sector Volcán** y **Sector Araucaria**).
-- **Encuesta de utilidad (RF-10):** Escala visual de retroalimentación al finalizar la consulta.
+## Mejoras implementadas
+- **Filtro accesible (RUT + Fecha de nacimiento):** Pensado para padres, madres o familiares acompañantes sin exigir códigos complejos.
+- **Enfoque prioritario en preparación y documentación:** Destaca visualmente las indicaciones obligatorias (ej. ayuno, uso de mascarilla) y los documentos requeridos antes de la cita.
+- **Mapas estructurales fieles a la señalética HEGC:** Replica el tablero oscuro, el Pasillo Principal a la derecha, el Área de Funcionarios a la izquierda y los bloques con sus colores e íconos institucionales reales por piso.
 
-## Casos de prueba incluidos
-1. **RUT:** `24.567.890-1` | **Código:** `1234` (Ecografía Abdominal en Sector Foca + Control Pediatría en Sector Araucaria)
-2. **RUT:** `25.111.222-3` | **Código:** `5678` (Toma de Muestras en Sector Volcán + Radiografía en Sector Foca)
+## Casos de prueba incluidos (1 por cada piso ambulatorio)
+1. **Piso 1 (Imagenología — Sector Foca 🦭):** RUT `24.567.890-1` | Nac: `14/05/2019`
+2. **Piso 2 (Toma de Muestras — Sector Picaflor 🐦):** RUT `25.111.222-3` | Nac: `22/08/2021`
+3. **Piso 3 (Cardiología Infantil — Sector Zanahoria 🥕):** RUT `23.888.999-4` | Nac: `10/03/2017`
+4. **Piso 4 (Oncología Ambulatoria — Sector Estrella ⭐):** RUT `22.444.555-6` | Nac: `30/11/2015`
