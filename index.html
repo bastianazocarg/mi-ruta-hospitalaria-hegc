@@ -67,6 +67,19 @@
       -ms-overflow-style: none;
       scrollbar-width: none;
     }
+
+    /* Evita que input[type="date"] se desborde o cambie de ancho en iOS/Safari */
+    input[type="date"] {
+      display: block;
+      width: 100%;
+      max-width: 100%;
+      min-width: 0;
+      box-sizing: border-box;
+      -webkit-appearance: none;
+      appearance: none;
+      min-height: 42px;
+      text-align: left;
+    }
   </style>
 </head>
 <body class="min-h-screen flex justify-center items-stretch sm:py-3">
@@ -294,7 +307,7 @@
                 <input
                   id="dob-input"
                   type="date"
-                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-sky-600"
+                  class="block w-full max-w-full min-w-0 px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-800 text-left focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-sky-600"
                 />
               </div>
 
