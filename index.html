@@ -3,323 +3,479 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mi Ruta Hospitalaria — HEGC</title>
+  <title>Mi Ruta Hospitalaria — Hospital Dr. Exequiel González Cortés</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --hegc-dark: #1E293B;
-      --hegc-blue: #1B5E91;
-      --hegc-purple: #5B2C6F;
-      --hegc-orange: #E67E22;
-      --hegc-green: #117A65;
-      --hegc-red: #C0392B;
-      --hegc-yellow: #E5B53A;
-    }
-
-    * {
-      box-sizing: border-box;
-      font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    }
-
     body {
-      background-color: #cbd5e1;
+      font-family: 'Inter', sans-serif;
+      background-color: #e2e8f0;
       color: #0f172a;
+      margin: 0;
+      padding: 0;
     }
 
-    /* Cabecera institucional con fachada HEGC al 45% de opacidad */
-    .hegc-header {
+    /* Fondo tipo acuarela de respaldo para la portada */
+    .hegc-cover-watercolor {
+      background:
+        radial-gradient(circle at 28% 24%, rgba(254, 240, 138, 0.85) 0%, rgba(251, 146, 60, 0.65) 32%, rgba(244, 114, 182, 0.45) 58%, rgba(56, 189, 248, 0.85) 100%);
+    }
+
+    /* Encabezado compacto en pantallas interiores */
+    .hegc-compact-header {
       position: relative;
-      background-color: #0f172a;
-      color: #ffffff;
-      border-bottom: 4px solid var(--hegc-blue);
       overflow: hidden;
+      min-height: 76px;
+      background: linear-gradient(120deg, #0f172a 0%, #1e3a5f 55%, #0f766e 100%);
     }
 
-    .hegc-header::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background-image: url('https://www.hegc.cl/wp-content/uploads/2021/04/6-2-scaled.jpg');
-      background-size: cover;
-      background-position: center 28%;
-      opacity: 0.45;
-      z-index: 0;
+    /* Fotografía de respaldo en portada y cabecera */
+    .hegc-cover-photo {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 48%;
+      display: block;
     }
 
-    /* Respaldo visual de fachada multicolor si no hay acceso externo */
-    .hegc-header-stripes {
+    .hegc-photo-layer {
       position: absolute;
       inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        rgba(192, 57, 43, 0.22) 0px,
-        rgba(192, 57, 43, 0.22) 14px,
-        rgba(230, 126, 34, 0.22) 14px,
-        rgba(230, 126, 34, 0.22) 28px,
-        rgba(17, 122, 101, 0.22) 28px,
-        rgba(17, 122, 101, 0.22) 42px,
-        rgba(27, 94, 145, 0.22) 42px,
-        rgba(27, 94, 145, 0.22) 56px,
-        rgba(229, 181, 58, 0.22) 56px,
-        rgba(229, 181, 58, 0.22) 70px
-      );
-      z-index: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 45%;
       pointer-events: none;
-    }
-
-    .hegc-header::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, rgba(15, 23, 42, 0.72) 0%, rgba(15, 23, 42, 0.38) 100%);
       z-index: 0;
     }
 
-    @keyframes pulseStroke {
-      0%, 100% { stroke-opacity: 1; }
-      50% { stroke-opacity: 0.45; }
+    @keyframes pulseMarker {
+      0%, 100% { transform: scale(1); opacity: 1; }
+      50% { transform: scale(1.07); opacity: 0.82; }
     }
 
-    .dest-highlight {
-      animation: pulseStroke 1.8s infinite ease-in-out;
+    .pulse-dest {
+      transform-box: fill-box;
+      transform-origin: center;
+      animation: pulseMarker 1.8s infinite ease-in-out;
+    }
+
+    .no-scrollbar::-webkit-scrollbar {
+      display: none;
+    }
+    .no-scrollbar {
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
   </style>
 </head>
-<body class="min-h-screen flex justify-center">
+<body class="min-h-screen flex justify-center items-stretch sm:py-3">
 
-  <!-- Contenedor Móvil Centrado -->
-  <div class="w-full max-w-[440px] bg-slate-100 min-h-screen shadow-2xl flex flex-col">
+  <!-- Contenedor tipo aplicación móvil centrada -->
+  <div id="app-shell" class="w-full max-w-[440px] min-h-screen sm:min-h-[820px] bg-slate-100 sm:rounded-[28px] shadow-2xl overflow-hidden flex flex-col relative border border-slate-300/70">
 
-    <!-- Cabecera Institucional -->
-    <header class="hegc-header px-5 py-5">
-      <div class="hegc-header-stripes"></div>
-      <div class="relative z-10">
-        <div class="flex items-center justify-between mb-1">
-          <span class="text-xs font-bold tracking-wide text-slate-100 drop-shadow">🏥 HEGC — Orientación Ambulatoria</span>
-          <span class="bg-slate-900/75 border border-white/25 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">
-            Prototipo
+    <!-- Cabecera Compacta con la fachada del hospital (visible en vistas interiores) -->
+    <header id="inner-header" class="hidden hegc-compact-header px-5 py-3.5">
+      <img
+        id="header-bg-img"
+        src="watermarked_img_8719654290202611217.jpg"
+        onerror="this.style.display='none';"
+        alt="Hospital Dr. Exequiel González Cortés"
+        class="hegc-photo-layer opacity-90"
+      />
+      <div class="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-900/45 to-slate-950/75 z-0 pointer-events-none"></div>
+      <div class="relative z-10 flex items-center justify-between">
+        <button onclick="goToView('login')" class="flex items-center gap-2.5 text-left group" title="Volver al inicio">
+          <!-- Logotipo Circular Celeste y Verde Menta (versión compacta) -->
+          <span class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center shrink-0 overflow-hidden ring-2 ring-sky-300/80">
+            <svg viewBox="0 0 120 120" class="w-9 h-9" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="60" cy="60" r="56" fill="none" stroke="#38BDF8" stroke-width="5" stroke-dasharray="230 35" transform="rotate(-120 60 60)"/>
+              <circle cx="60" cy="60" r="52" fill="none" stroke="#34D399" stroke-width="4" stroke-dasharray="190 50" transform="rotate(40 60 60)"/>
+              <rect x="26" y="47" width="13" height="24" rx="3" fill="#38BDF8"/>
+              <rect x="41" y="38" width="18" height="33" rx="4" fill="#34D399"/>
+              <rect x="61" y="49" width="12" height="22" rx="3" fill="#38BDF8"/>
+              <rect x="48" y="44" width="4" height="10" rx="1" fill="#FFFFFF"/>
+              <rect x="45" y="47" width="10" height="4" rx="1" fill="#FFFFFF"/>
+              <path d="M25 71 Q45 64 68 70 T96 76" fill="none" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+              <path d="M78 24 C66 24 58 33 58 44 C58 58 78 74 78 74 C78 74 98 58 98 44 C98 33 90 24 78 24 Z" fill="#0284C7"/>
+              <circle cx="78" cy="43" r="11" fill="#FFFFFF"/>
+              <rect x="76" y="37" width="4" height="12" rx="1" fill="#0284C7"/>
+              <rect x="72" y="41" width="12" height="4" rx="1" fill="#0284C7"/>
+            </svg>
           </span>
-        </div>
-        <h1 class="text-xl font-extrabold tracking-tight drop-shadow">Mi Ruta Hospitalaria</h1>
-        <p class="text-xs text-slate-200 font-medium drop-shadow">Indicaciones previas, documentación y plano oficial por piso</p>
+          <div>
+            <p class="text-[11px] font-extrabold tracking-wide text-white leading-tight drop-shadow">MI RUTA HOSPITALARIA</p>
+            <p class="text-[10px] text-sky-200 font-medium leading-tight drop-shadow">Hospital Dr. Exequiel González Cortés</p>
+          </div>
+        </button>
+
+        <button onclick="goToView('login')" class="text-xs font-semibold bg-white/95 hover:bg-white text-slate-800 px-3 py-1.5 rounded-full transition shadow">
+          Nueva consulta
+        </button>
       </div>
     </header>
 
-    <!-- Contenido Principal -->
-    <main class="p-4 flex-1">
+    <!-- Cuerpo Principal -->
+    <main class="flex-1 flex flex-col overflow-y-auto no-scrollbar">
 
-      <!-- VISTA 1: CONSULTA CON RUT + FECHA DE NACIMIENTO -->
-      <section id="view-login" class="space-y-4">
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-          <h2 class="text-base font-bold text-slate-900 mb-1 flex items-center gap-2">
-            <span>🔍</span> Consulta tu atención
-          </h2>
-          <p class="text-xs text-slate-600 mb-4 leading-relaxed">
-            Ingresa el <strong>RUT</strong> y la <strong>fecha de nacimiento</strong> del paciente para revisar su preparación previa y el plano exacto de su sector.
+      <!-- VISTA 1: PORTADA CON ILUSTRACIÓN DEL HOSPITAL Y LOGO CIRCULAR -->
+      <section id="view-login" class="relative flex-1 flex flex-col justify-between overflow-hidden hegc-cover-watercolor">
+        <!-- Capa de fondo: Ilustración del Hospital al atardecer -->
+        <div class="absolute inset-0 z-0">
+          <svg class="absolute inset-0 w-full h-full object-cover pointer-events-none" viewBox="0 0 440 820" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <defs>
+              <linearGradient id="skySunset" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#38bdf8"/>
+                <stop offset="28%" stop-color="#bae6fd"/>
+                <stop offset="45%" stop-color="#fbcfe8"/>
+                <stop offset="58%" stop-color="#fdba74"/>
+                <stop offset="70%" stop-color="#fef08a"/>
+              </linearGradient>
+              <radialGradient id="glowLamp" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="#fef08a" stop-opacity="0.95"/>
+                <stop offset="55%" stop-color="#fde047" stop-opacity="0.35"/>
+                <stop offset="100%" stop-color="#fde047" stop-opacity="0"/>
+              </radialGradient>
+            </defs>
+
+            <rect width="440" height="820" fill="url(#skySunset)"/>
+            <ellipse cx="115" cy="140" rx="140" ry="26" fill="#f472b6" opacity="0.26"/>
+            <ellipse cx="320" cy="170" rx="145" ry="24" fill="#fb7185" opacity="0.22"/>
+            <ellipse cx="190" cy="230" rx="190" ry="28" fill="#fb923c" opacity="0.30"/>
+
+            <!-- Edificio en esquina -->
+            <polygon points="0,335 38,315 38,615 0,625" fill="#64748b" stroke="#1e293b" stroke-width="1.5"/>
+            <polygon points="38,295 162,215 162,615 38,620" fill="#94a3b8" stroke="#1e293b" stroke-width="2"/>
+            <polygon points="162,215 440,320 440,605 162,615" fill="#64748b" stroke="#1e293b" stroke-width="2"/>
+            <polygon points="162,215 440,320 440,356 162,265" fill="#475569" stroke="#1e293b" stroke-width="1.5"/>
+            <text x="298" y="294" transform="rotate(20.6 298 294)" text-anchor="middle" fill="#ffffff" stroke="#0f172a" stroke-width="0.6" font-family="Inter, sans-serif" font-weight="900" font-size="11.5" letter-spacing="0.5">
+              HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS
+            </text>
+
+            <!-- Ventanas y quiebresoles de colores -->
+            <g fill="#fef08a" opacity="0.92">
+              <polygon points="190,295 425,375 425,402 190,332"/>
+              <polygon points="190,352 425,420 425,446 190,388"/>
+              <polygon points="190,410 425,465 425,490 190,444"/>
+              <polygon points="190,468 425,510 425,535 190,500"/>
+            </g>
+            <g stroke-width="4.5" stroke-linecap="round">
+              <line x1="196" y1="286" x2="196" y2="508" stroke="#dc2626"/>
+              <line x1="210" y1="291" x2="210" y2="511" stroke="#ea580c"/>
+              <line x1="224" y1="296" x2="224" y2="514" stroke="#f59e0b"/>
+              <line x1="238" y1="301" x2="238" y2="517" stroke="#eab308"/>
+              <line x1="252" y1="306" x2="252" y2="520" stroke="#84cc16"/>
+              <line x1="266" y1="311" x2="266" y2="523" stroke="#22c55e"/>
+              <line x1="280" y1="316" x2="280" y2="526" stroke="#10b981"/>
+              <line x1="294" y1="321" x2="294" y2="529" stroke="#06b6d4"/>
+              <line x1="308" y1="326" x2="308" y2="532" stroke="#0284c7"/>
+              <line x1="322" y1="331" x2="322" y2="535" stroke="#eab308"/>
+              <line x1="336" y1="336" x2="336" y2="538" stroke="#f97316"/>
+              <line x1="350" y1="341" x2="350" y2="541" stroke="#dc2626"/>
+              <line x1="364" y1="346" x2="364" y2="544" stroke="#65a30d"/>
+              <line x1="378" y1="351" x2="378" y2="547" stroke="#0284c7"/>
+              <line x1="392" y1="356" x2="392" y2="550" stroke="#f59e0b"/>
+            </g>
+
+            <!-- Suelo, áreas verdes y faroles -->
+            <rect x="0" y="605" width="440" height="215" fill="#fed7aa"/>
+            <polygon points="0,615 160,608 240,655 0,720" fill="#86efac" opacity="0.85"/>
+            <polygon points="270,615 440,610 440,715 310,670" fill="#86efac" opacity="0.85"/>
+
+            <g transform="translate(345, 575)">
+              <path d="M8,22 L16,8 L52,8 L64,20 L74,23 L74,34 L4,34 L4,24 Z" fill="#ef4444" stroke="#1e293b" stroke-width="1.6"/>
+              <circle cx="18" cy="34" r="7" fill="#1e293b"/>
+              <circle cx="58" cy="34" r="7" fill="#1e293b"/>
+            </g>
+
+            <circle cx="105" cy="442" r="34" fill="url(#glowLamp)"/>
+            <line x1="105" y1="452" x2="105" y2="665" stroke="#334155" stroke-width="4"/>
+            <polygon points="94,434 116,434 111,452 99,452" fill="#fef08a" stroke="#1e293b" stroke-width="1.5"/>
+          </svg>
+
+          <img
+            id="cover-bg-img"
+            src="watermarked_img_8719654290202611217.jpg"
+            onerror="this.style.display='none';"
+            alt="Hospital Dr. Exequiel González Cortés"
+            class="hegc-cover-photo relative z-10"
+          />
+          <div class="absolute inset-0 bg-gradient-to-b from-slate-950/35 via-transparent to-slate-100/95 z-20 pointer-events-none"></div>
+        </div>
+
+        <!-- Bloque Superior: Logo Circular Celeste/Verde Menta + Identidad Limpia -->
+        <div class="relative z-30 px-6 pt-7 pb-4 text-center text-white">
+          <!-- Logotipo Circular Celeste y Verde Menta -->
+          <div class="mx-auto w-24 h-24 rounded-full bg-white shadow-xl flex items-center justify-center mb-3 ring-4 ring-sky-300/80 overflow-hidden">
+            <svg viewBox="0 0 200 200" class="w-[92px] h-[92px]" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo circular Mi Ruta Hospitalaria">
+              <defs>
+                <path id="topArc" d="M 28,100 A 72,72 0 1,1 172,100" />
+                <path id="bottomArc" d="M 24,100 A 76,76 0 0,0 176,100" />
+              </defs>
+              <!-- Aro exterior celeste y verde menta -->
+              <circle cx="100" cy="100" r="92" fill="none" stroke="#38BDF8" stroke-width="7" stroke-dasharray="390 190" transform="rotate(-145 100 100)"/>
+              <circle cx="100" cy="100" r="85" fill="none" stroke="#34D399" stroke-width="5" stroke-dasharray="330 210" transform="rotate(25 100 100)"/>
+
+              <!-- Texto curvo superior: MI RUTA -->
+              <text fill="#0369A1" font-family="Inter, sans-serif" font-weight="900" font-size="22" letter-spacing="2">
+                <textPath href="#topArc" startOffset="50%" text-anchor="middle">MI RUTA</textPath>
+              </text>
+
+              <!-- Texto curvo inferior: HOSPITALARIA -->
+              <text fill="#10B981" font-family="Inter, sans-serif" font-weight="800" font-size="16" letter-spacing="1.4">
+                <textPath href="#bottomArc" startOffset="50%" text-anchor="middle">HOSPITALARIA</textPath>
+              </text>
+
+              <!-- Silueta del hospital en celeste y verde agua -->
+              <rect x="42" y="84" width="20" height="36" rx="4" fill="#38BDF8"/>
+              <rect x="47" y="90" width="4" height="4" rx="1" fill="#FFFFFF"/>
+              <rect x="53" y="90" width="4" height="4" rx="1" fill="#FFFFFF"/>
+              <rect x="47" y="98" width="4" height="4" rx="1" fill="#FFFFFF"/>
+
+              <rect x="65" y="70" width="28" height="50" rx="6" fill="#34D399"/>
+              <rect x="77" y="76" width="4" height="12" rx="1" fill="#FFFFFF"/>
+              <rect x="73" y="80" width="12" height="4" rx="1" fill="#FFFFFF"/>
+              <rect x="71" y="94" width="5" height="5" rx="1" fill="#FFFFFF"/>
+              <rect x="82" y="94" width="5" height="5" rx="1" fill="#FFFFFF"/>
+              <rect x="76" y="106" width="6" height="14" rx="2" fill="#FFFFFF"/>
+
+              <rect x="96" y="86" width="18" height="34" rx="4" fill="#38BDF8"/>
+              <rect x="101" y="92" width="4" height="4" rx="1" fill="#FFFFFF"/>
+              <rect x="101" y="100" width="4" height="4" rx="1" fill="#FFFFFF"/>
+
+              <!-- Colina y camino serpenteante -->
+              <path d="M36 122 Q100 106 164 122 L156 134 L44 134 Z" fill="#A7F3D0"/>
+              <path d="M52 133 C72 122 86 122 98 117 C110 112 122 114 138 106" fill="none" stroke="#FFFFFF" stroke-width="9" stroke-linecap="round"/>
+              <path d="M52 133 C72 122 86 122 98 117 C110 112 122 114 138 106" fill="none" stroke="#38BDF8" stroke-width="4" stroke-linecap="round"/>
+
+              <!-- Pin de ubicación azul hospitalario con cruz blanca -->
+              <path d="M134 44 C116 44 104 57 104 74 C104 95 134 118 134 118 C134 118 164 95 164 74 C164 57 152 44 134 44 Z" fill="#0284C7"/>
+              <circle cx="134" cy="72" r="17" fill="#FFFFFF"/>
+              <rect x="131" y="63" width="6" height="18" rx="1.5" fill="#0284C7"/>
+              <rect x="125" y="69" width="18" height="6" rx="1.5" fill="#0284C7"/>
+            </svg>
+          </div>
+
+          <div class="inline-block bg-slate-950/75 backdrop-blur-sm px-3.5 py-1 rounded-full border border-white/20 mb-2">
+            <span class="text-[10px] font-bold uppercase tracking-widest text-sky-200">
+              Hospital Dr. Exequiel González Cortés
+            </span>
+          </div>
+
+          <h1 class="text-2xl font-black tracking-tight drop-shadow-[0_2px_8px_rgba(0,0,0,0.75)]">
+            Mi Ruta Hospitalaria
+          </h1>
+          <p class="text-xs text-white/95 font-medium mt-1 drop-shadow-[0_1px_6px_rgba(0,0,0,0.8)]">
+            Prepara tu visita y encuentra tu sector fácilmente
           </p>
+        </div>
 
-          <!-- Caja de error sin alert() -->
-          <div id="login-error" class="hidden bg-red-50 border border-red-200 text-red-800 text-xs font-semibold px-3 py-2.5 rounded-xl mb-3"></div>
+        <!-- Bloque Inferior: Tarjeta Simple de Consulta -->
+        <div class="relative z-30 px-4 pb-6">
+          <div class="bg-white/95 backdrop-blur-md rounded-3xl shadow-xl p-5 border border-white">
+            <form id="login-form" onsubmit="handleLoginSubmit(event)" class="space-y-3.5">
+              <div>
+                <label for="rut-input" class="block text-xs font-bold text-slate-700 mb-1">
+                  RUT del Paciente
+                </label>
+                <input
+                  id="rut-input"
+                  type="text"
+                  placeholder="Ej: 24.567.890-1"
+                  oninput="formatRutInput(this)"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-sky-600"
+                />
+              </div>
 
-          <div class="space-y-3">
-            <div>
-              <label for="rut-input" class="block text-xs font-bold text-slate-700 mb-1">RUT del Paciente</label>
-              <input
-                type="text"
-                id="rut-input"
-                placeholder="Ej: 24.567.890-1"
-                maxlength="12"
-                class="w-full px-3.5 py-3 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-600"
-              />
+              <div>
+                <label for="dob-input" class="block text-xs font-bold text-slate-700 mb-1">
+                  Fecha de Nacimiento
+                </label>
+                <input
+                  id="dob-input"
+                  type="date"
+                  class="w-full px-3.5 py-2.5 rounded-xl border border-slate-300 bg-white text-sm font-semibold text-slate-800 focus:outline-none focus:ring-2 focus:ring-sky-600 focus:border-sky-600"
+                />
+              </div>
+
+              <div id="login-error" class="hidden text-xs font-semibold text-rose-700 bg-rose-50 border border-rose-200 rounded-xl px-3 py-2">
+              </div>
+
+              <button
+                type="submit"
+                class="w-full bg-sky-700 hover:bg-sky-800 active:scale-[0.99] text-white font-bold text-sm py-3 rounded-xl shadow-md transition flex items-center justify-center gap-2"
+              >
+                <span>Consultar mi ruta</span>
+                <span>→</span>
+              </button>
+            </form>
+
+            <!-- Accesos rápidos discretos para probar los 5 pisos -->
+            <div class="mt-4 pt-3 border-t border-slate-200/80">
+              <button
+                type="button"
+                onclick="toggleDemoDrawer()"
+                class="w-full flex items-center justify-between text-[11px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider"
+              >
+                <span>🧪 Ejemplos rápidos por piso (1 al 5)</span>
+                <span id="demo-chevron">⌄</span>
+              </button>
+
+              <div id="demo-drawer" class="mt-2.5 grid grid-cols-5 gap-1.5">
+                <button type="button" onclick="fillDemoPatient(0)" class="py-1.5 px-1 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-center transition">
+                  <span class="block text-sm">🦭</span>
+                  <span class="block text-[10px] font-extrabold text-purple-900">Piso 1</span>
+                </button>
+                <button type="button" onclick="fillDemoPatient(1)" class="py-1.5 px-1 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-200 text-center transition">
+                  <span class="block text-sm">🐦</span>
+                  <span class="block text-[10px] font-extrabold text-amber-900">Piso 2</span>
+                </button>
+                <button type="button" onclick="fillDemoPatient(2)" class="py-1.5 px-1 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-200 text-center transition">
+                  <span class="block text-sm">🥕</span>
+                  <span class="block text-[10px] font-extrabold text-sky-900">Piso 3</span>
+                </button>
+                <button type="button" onclick="fillDemoPatient(3)" class="py-1.5 px-1 rounded-xl bg-cyan-50 hover:bg-cyan-100 border border-cyan-200 text-center transition">
+                  <span class="block text-sm">⭐</span>
+                  <span class="block text-[10px] font-extrabold text-cyan-900">Piso 4</span>
+                </button>
+                <button type="button" onclick="fillDemoPatient(4)" class="py-1.5 px-1 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-center transition">
+                  <span class="block text-sm">🦙</span>
+                  <span class="block text-[10px] font-extrabold text-orange-900">Piso 5</span>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      </section>
 
+      <!-- VISTA 2: RESUMEN DE CITACIÓN, INDICACIONES Y DOCUMENTACIÓN -->
+      <section id="view-summary" class="hidden flex-1 p-4 space-y-4">
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+          <div class="flex items-start justify-between gap-2">
             <div>
-              <label for="dob-input" class="block text-xs font-bold text-slate-700 mb-1">Fecha de Nacimiento del Paciente</label>
-              <input
-                type="date"
-                id="dob-input"
-                class="w-full px-3.5 py-3 border border-slate-300 rounded-xl text-sm bg-white focus:outline-none focus:ring-2 focus:ring-sky-600"
-              />
-              <p class="text-[11px] text-slate-500 mt-1.5">🔒 Validación accesible para madres, padres o acompañantes.</p>
+              <span class="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800">
+                Atención Ambulatoria Confirmada
+              </span>
+              <h2 id="sum-patient-name" class="text-lg font-extrabold text-slate-900 mt-1.5">Nombre Paciente</h2>
+              <p id="sum-patient-meta" class="text-xs text-slate-500 font-medium">RUT • Edad</p>
             </div>
+            <div class="text-right shrink-0 bg-gradient-to-br from-sky-600 to-teal-600 text-white px-3 py-2 rounded-xl shadow-sm border border-sky-200">
+              <p id="sum-date" class="text-[11px] font-bold text-sky-100">Fecha</p>
+              <p id="sum-time" class="text-sm font-black text-white">09:30 hrs</p>
+            </div>
+          </div>
 
+          <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+            <div>
+              <p class="text-[11px] font-semibold text-slate-400 uppercase">Especialidad y Sector</p>
+              <p id="sum-specialty" class="text-sm font-bold text-slate-800">Especialidad</p>
+              <p id="sum-location" class="text-xs font-semibold text-sky-700">Piso • Sector</p>
+            </div>
+            <span id="sum-floor-badge" class="px-3 py-1.5 rounded-xl text-xs font-black text-white bg-slate-800 shrink-0">
+              PISO
+            </span>
+          </div>
+        </div>
+
+        <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 shadow-sm">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-black flex items-center justify-center">!</span>
+            <h3 class="text-sm font-extrabold text-rose-950 uppercase tracking-wide">
+              Indicaciones Previas Obligatorias
+            </h3>
+          </div>
+          <ul id="sum-indications" class="space-y-2 text-xs text-rose-950 font-medium"></ul>
+        </div>
+
+        <div class="bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm">
+          <h3 class="text-sm font-extrabold text-amber-950 mb-2 flex items-center gap-1.5">
+            <span>📄</span> Documentación que debes llevar
+          </h3>
+          <ul id="sum-documents" class="space-y-1.5 text-xs text-amber-950 font-medium"></ul>
+        </div>
+
+        <button
+          onclick="goToView('map')"
+          class="w-full bg-sky-700 hover:bg-sky-800 active:scale-[0.99] text-white font-extrabold text-sm py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2"
+        >
+          <span>🗺️</span>
+          <span>Ver cómo llegar en el mapa del piso</span>
+          <span>→</span>
+        </button>
+      </section>
+
+      <!-- VISTA 3: PLANO INTERACTIVO 1:1 DEL PISO Y RUTA PASO A PASO -->
+      <section id="view-map" class="hidden flex-1 p-4 space-y-4">
+        <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-200">
+          <div class="mb-2.5 px-1 space-y-2">
+            <div class="flex items-center gap-1.5">
+              <span id="map-floor-pill" class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-slate-900 text-white shrink-0">PISO</span>
+              <span id="map-sector-label" class="text-xs font-bold text-slate-700">Sector Destino</span>
+            </div>
             <button
-              onclick="consultarPaciente()"
-              class="w-full bg-[#1B5E91] hover:bg-[#154b75] text-white font-bold text-sm py-3.5 rounded-xl transition shadow-sm cursor-pointer"
+              type="button"
+              onclick="goToView('summary')"
+              class="w-full py-2 px-3.5 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-[0.99] text-sky-800 border border-sky-300 text-xs font-extrabold whitespace-nowrap transition flex items-center justify-center gap-1.5 shadow-xs"
             >
-              Ver Indicaciones y Ruta →
+              <span>←</span>
+              <span>Volver a indicaciones</span>
             </button>
           </div>
 
-          <!-- Casos de prueba rápidos por cada piso (1 al 5) -->
-          <div class="mt-5 pt-4 border-t border-dashed border-slate-300">
-            <p class="text-[11px] font-extrabold text-slate-500 uppercase tracking-wider mb-2.5">
-              🧪 Ejemplos por piso (toca para probar):
-            </p>
-            <div class="grid grid-cols-2 gap-2">
-              <button
-                onclick="cargarDemo('24.567.890-1', '2019-05-14')"
-                class="text-left bg-slate-50 hover:bg-purple-50 border border-slate-200 hover:border-purple-400 rounded-xl p-2.5 transition cursor-pointer"
-              >
-                <span class="block text-[10px] font-extrabold text-[#5B2C6F]">PISO 1 • FOCA 🦭</span>
-                <span class="block text-xs font-bold text-slate-800 mt-0.5">Ecografía Abdominal</span>
-              </button>
+          <div id="map-svg-wrapper" class="w-full rounded-xl overflow-hidden bg-slate-900 shadow-inner"></div>
 
-              <button
-                onclick="cargarDemo('25.111.222-3', '2021-08-22')"
-                class="text-left bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-400 rounded-xl p-2.5 transition cursor-pointer"
-              >
-                <span class="block text-[10px] font-extrabold text-[#E67E22]">PISO 2 • PICAFLOR 🐦</span>
-                <span class="block text-xs font-bold text-slate-800 mt-0.5">Toma de Muestras</span>
-              </button>
-
-              <button
-                onclick="cargarDemo('23.888.999-4', '2017-03-10')"
-                class="text-left bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-400 rounded-xl p-2.5 transition cursor-pointer"
-              >
-                <span class="block text-[10px] font-extrabold text-[#1B5E91]">PISO 3 • ZANAHORIA 🥕</span>
-                <span class="block text-xs font-bold text-slate-800 mt-0.5">Cardiología Infantil</span>
-              </button>
-
-              <button
-                onclick="cargarDemo('22.444.555-6', '2015-11-30')"
-                class="text-left bg-slate-50 hover:bg-sky-50 border border-slate-200 hover:border-sky-400 rounded-xl p-2.5 transition cursor-pointer"
-              >
-                <span class="block text-[10px] font-extrabold text-[#1B5E91]">PISO 4 • ESTRELLA ⭐</span>
-                <span class="block text-xs font-bold text-slate-800 mt-0.5">Oncología Ambulatoria</span>
-              </button>
-
-              <button
-                onclick="cargarDemo('21.777.888-9', '2018-09-05')"
-                class="col-span-2 text-left bg-slate-50 hover:bg-orange-50 border border-slate-200 hover:border-orange-400 rounded-xl p-2.5 transition cursor-pointer"
-              >
-                <span class="block text-[10px] font-extrabold text-[#E67E22]">PISO 5 • ALPACA 🦙</span>
-                <span class="block text-xs font-bold text-slate-800 mt-0.5">Ingreso Programado Hospitalización</span>
-              </button>
-            </div>
+          <div class="mt-2.5 px-1 flex flex-wrap items-center justify-between gap-2 text-[11px] font-semibold text-slate-600">
+            <span class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-sm bg-sky-700 border border-amber-400 inline-block"></span>
+              Inicio: Asc. Principales
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-3 h-3 rounded-sm bg-amber-400 border border-amber-700 inline-block"></span>
+              Destino resaltado
+            </span>
           </div>
         </div>
-      </section>
 
-      <!-- VISTA 2: LISTA DE ATENCIONES DEL PACIENTE -->
-      <section id="view-list" class="hidden space-y-3">
-        <div class="bg-white border-l-4 border-[#1B5E91] rounded-xl p-3.5 shadow-sm">
-          <h2 id="patient-name" class="text-sm font-extrabold text-slate-900">Paciente</h2>
-          <p id="patient-rut" class="text-xs text-slate-500 mt-0.5">RUT</p>
-        </div>
-
-        <p class="text-xs font-bold text-slate-600 px-1">
-          Selecciona la prestación para ver indicaciones, documentos y mapa:
-        </p>
-
-        <div id="exams-container" class="space-y-3"></div>
-
-        <button
-          onclick="volverInicio()"
-          class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-xs py-3 rounded-xl transition cursor-pointer"
-        >
-          ← Consultar otro paciente
-        </button>
-      </section>
-
-      <!-- VISTA 3: DETALLE CLÍNICO + PLANO VECTORIAL 1:1 HEGC -->
-      <section id="view-detail" class="hidden space-y-4">
-        <button
-          onclick="volverLista()"
-          class="w-full bg-white hover:bg-slate-50 border border-slate-300 text-slate-800 font-bold text-xs py-2.5 rounded-xl transition cursor-pointer"
-        >
-          ← Volver a atenciones
-        </button>
-
-        <!-- Tarjeta 1: Prestación, Indicaciones Previas y Documentación -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-          <div class="flex items-start justify-between gap-2 mb-2">
-            <h2 id="det-nombre" class="text-base font-extrabold text-slate-900 leading-snug">Prestación</h2>
-            <span id="det-piso-pill" class="text-[11px] font-extrabold text-white px-2.5 py-1 rounded-lg whitespace-nowrap">PISO 1</span>
-          </div>
-
-          <div id="det-meta" class="text-xs text-slate-600 space-y-1 mb-3"></div>
-
-          <!-- Bloque Protagonista 1: Indicaciones Previas -->
-          <div id="det-prep-box" class="rounded-xl p-3.5 border-l-4 mb-3">
-            <div id="det-prep-title" class="text-xs font-extrabold uppercase tracking-wide mb-1"></div>
-            <p id="det-prep-text" class="text-xs leading-relaxed font-medium"></p>
-          </div>
-
-          <!-- Bloque Protagonista 2: Documentación Necesaria -->
-          <div class="bg-slate-50 border border-slate-200 rounded-xl p-3.5">
-            <h3 class="text-xs font-extrabold text-slate-800 uppercase tracking-wide mb-2">📄 Documentos que debes traer</h3>
-            <ul id="det-docs" class="space-y-1.5 text-xs text-slate-700"></ul>
-          </div>
-        </div>
-
-        <!-- Tarjeta 2: Plano Vectorial 1:1 del Hospital + Guía desde Ascensores Principales -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-          <h3 class="text-sm font-extrabold text-slate-900 mb-1 flex items-center gap-1.5">
-            <span>🧭</span> Ubicación exacta en el plano del hospital
+          <h3 class="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-1.5">
+            <span>🧭</span> Ruta paso a paso desde Ascensores Principales
           </h3>
-          <p id="det-ubicacion-resumen" class="text-xs text-slate-600 mb-3 leading-relaxed"></p>
-
-          <!-- Plano SVG Vectorial 1:1 fiel a la señalética HEGC -->
-          <div id="det-svg-board" class="w-full rounded-2xl overflow-hidden shadow-md border border-slate-800 bg-slate-900">
-            <!-- Inyectado dinámicamente -->
-          </div>
-
-          <!-- Leyenda rápida del plano -->
-          <div class="mt-2.5 flex flex-wrap items-center justify-between gap-2 text-[10px] text-slate-500 px-1">
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-amber-400 inline-block"></span> Destino ("AQUÍ VAS")</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-sky-700 border border-amber-400 inline-block"></span> Ascensores Principales</span>
-            <span class="flex items-center gap-1"><span class="w-2.5 h-2.5 rounded-sm bg-white border border-slate-400 inline-block"></span> Patio de luz</span>
-          </div>
-
-          <!-- Guía paso a paso -->
-          <div class="mt-3 pt-3 border-t border-slate-100">
-            <h4 class="text-xs font-extrabold text-slate-800 uppercase tracking-wide mb-2">
-              🛗 Punto de inicio: Ascensores Principales
-            </h4>
-            <div id="det-ruta-pasos" class="space-y-2 text-xs text-slate-700"></div>
-          </div>
+          <ol id="map-steps" class="space-y-2.5 text-xs text-slate-700 font-medium"></ol>
         </div>
 
-        <!-- Tarjeta 3: Evaluación rápida de usabilidad -->
-        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 text-center">
-          <p class="text-xs font-bold text-slate-800 mb-2.5">¿Te quedó clara la preparación y cómo llegar?</p>
-          <div class="flex justify-between gap-1.5">
-            <button onclick="calificar(this)" class="rate-btn flex-1 bg-slate-100 hover:bg-sky-50 border border-slate-200 rounded-xl py-2 text-lg cursor-pointer transition">😞</button>
-            <button onclick="calificar(this)" class="rate-btn flex-1 bg-slate-100 hover:bg-sky-50 border border-slate-200 rounded-xl py-2 text-lg cursor-pointer transition">🙁</button>
-            <button onclick="calificar(this)" class="rate-btn flex-1 bg-slate-100 hover:bg-sky-50 border border-slate-200 rounded-xl py-2 text-lg cursor-pointer transition">😐</button>
-            <button onclick="calificar(this)" class="rate-btn flex-1 bg-slate-100 hover:bg-sky-50 border border-slate-200 rounded-xl py-2 text-lg cursor-pointer transition">🙂</button>
-            <button onclick="calificar(this)" class="rate-btn flex-1 bg-slate-100 hover:bg-sky-50 border border-slate-200 rounded-xl py-2 text-lg cursor-pointer transition">🤩</button>
+        <div class="bg-gradient-to-br from-sky-700 to-teal-700 text-white rounded-2xl p-4 shadow-md border border-sky-500/40">
+          <div class="flex items-center justify-between gap-2 mb-1">
+            <span class="text-[10px] font-extrabold uppercase tracking-wider text-white">
+              Señalética en el hospital
+            </span>
+            <span id="map-motif-badge" class="text-xs font-bold bg-white/15 text-white px-2.5 py-0.5 rounded-full">
+              Motivo
+            </span>
           </div>
-          <p id="rating-feedback" class="hidden text-xs text-emerald-700 font-bold mt-2">
-            ¡Gracias por tu evaluación!
-          </p>
+          <p id="map-tip" class="text-xs text-white/95 leading-relaxed"></p>
         </div>
       </section>
+
     </main>
 
-    <!-- Pie de página -->
-    <footer class="bg-white border-t border-slate-200 px-4 py-3 text-center text-[11px] text-slate-500">
-      Prototipo Demostrativo • Portafolio de Título Informática Biomédica<br>
-      Señalética arquitectónica basada en planos oficiales HEGC
+    <!-- Pie discreto -->
+    <footer class="bg-white border-t border-slate-200 px-4 py-2.5 text-center text-[10px] text-slate-400 font-medium">
+      Prototipo Demostrativo • Portafolio de Título Informática Biomédica • Planos HEGC
     </footer>
   </div>
 
   <script>
-    // Colores institucionales exactos de los tableros HEGC
     const PALETTE = {
       purple: '#5B2C6F',
       blue:   '#1B5E91',
       orange: '#E67E22',
       green:  '#117A65',
       red:    '#C0392B',
-      yellow: '#E5B53A',
+      yellow: '#D4AC0D',
       board:  '#1E293B',
       corridor: '#232F3E'
     };
 
-    // Librería de íconos vectoriales de línea blanca (stroke="white") fieles al hospital
     const ICONS = {
       milodon: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M10 21v-4l-2-3c-1-2 0-5 2-7 1-1 3-2 4-1 1 1 1 3 0 4l2 2c1 1 2 3 1 5l-1 4"/>
@@ -361,7 +517,6 @@
       </g>`,
       copihue: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 4v3M9 7h6l2 10-3-1-2 2-2-2-3 1L9 7z"/>
-        <path d="M12 5c2-1 4 0 5 1"/>
       </g>`,
       pudu: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 15v5M9 15v5M15 15v5M18 15v5M6 15h12l1-4-3-2-1-3-2 2H8l-2 3v4z"/>
@@ -387,23 +542,17 @@
       picaflor: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14 9l6-2-5 4 2 7-4-4-5 2 2-5-5-4 6 1 3-2z"/>
       </g>`,
-      uvas: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-        <path d="M12 4v3M9 6c2 0 4 1 6 0"/>
-        <circle cx="9" cy="10" r="1.8"/><circle cx="12" cy="10" r="1.8"/><circle cx="15" cy="10" r="1.8"/>
-        <circle cx="10.5" cy="13.5" r="1.8"/><circle cx="13.5" cy="13.5" r="1.8"/>
-        <circle cx="12" cy="17" r="1.8"/>
-      </g>`,
       zanahoria: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M16 8c2-2 4-2 4-2s0 2-2 4M15 6l1-3M18 9l3-1"/>
         <path d="M15 7L6 18l11-9-2-2z"/>
       </g>`,
       gallo: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M8 14c0-3 2-5 5-5l2-3 2 2-1 3c2 1 3 3 2 5H8z"/>
-        <path d="M8 14l-3-2-1 3 4 1M11 16v4M14 16v4"/>
+        <path d="M11 16v4M14 16v4"/>
       </g>`,
       oveja: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M7 14a3 3 0 0 1 2-5 3.5 3.5 0 0 1 6 0 3 3 0 0 1 2 5H7z"/>
-        <path d="M17 11l3 1-1 2h-2M9 14v5M15 14v5"/>
+        <path d="M9 14v5M15 14v5"/>
       </g>`,
       caballo: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M6 19v-6l4-2 3-5 3 1-1 4h3v8M10 13v6M15 13v6"/>
@@ -414,11 +563,11 @@
       </g>`,
       volantin: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <polygon points="12,3 19,10 12,17 5,10"/>
-        <path d="M12 3v14M5 10h14M12 17c-2 2 2 3-1 5"/>
+        <path d="M12 3v14M5 10h14"/>
       </g>`,
       castillo: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M4 19V9h3v2h2V7h6v4h2V9h3v10H4z"/>
-        <path d="M10 19v-4h4v4M12 7V4l3 1-3 1"/>
+        <path d="M10 19v-4h4v4"/>
       </g>`,
       velero: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 4v11l6-2-6-9zM12 6L6 15h6"/>
@@ -440,20 +589,18 @@
       </g>`,
       flamenco: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M12 5c2 0 2 3 0 5-2 2 2 4 4 4-3 2-7 1-7-2s3-5 3-7z"/>
-        <path d="M12 14v6M12 17l2 1-2 1"/>
+        <path d="M12 14v6"/>
       </g>`,
       desierto: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="8" cy="12" r="3"/>
-        <path d="M13 19l3-11M13 19l6-8M13 19l4-4"/>
+        <path d="M13 19l3-11M13 19l6-8"/>
       </g>`
     };
 
-    // Geometría 1:1 exacta de los 5 pisos validada en el editor
-    const FLOORS_SVG_DATA = {
+    const FLOOR_MAPS = {
       1: {
         num: 1,
         title: 'PISO 1',
-        colorHex: PALETTE.purple,
         perimeterOuter: 'M 32 30 H 314 V 66 H 334 V 358 H 362 V 402 H 334 V 632 H 154 V 592 H 32 Z',
         perimeterInner: 'M 38 36 H 308 V 72 H 328 V 364 H 356 V 396 H 328 V 626 H 160 V 586 H 38 Z',
         corridorPath: 'M 284 44 H 300 V 80 H 320 V 364 H 350 V 396 H 320 V 618 H 284 V 248 H 254 V 212 H 284 Z',
@@ -483,53 +630,35 @@
           {
             id: 'p1-mant',
             name: 'MANTENCIÓN • VESTIDORES • GUARDARROPÍA',
-            x: 92, y: 164, w: 186, h: 42,
-            color: PALETTE.green,
-            icon: 'gaviota',
+            x: 92, y: 164, w: 186, h: 42, color: PALETTE.green, icon: 'gaviota',
             multiIcons: [
-              { icon: 'gaviota', label: 'MANTENCIÓN Y MOVILIZACIÓN', x: 124, y: 177 },
+              { icon: 'gaviota', label: 'MANTENCIÓN', x: 124, y: 177 },
               { icon: 'colgador', label: 'VESTIDORES', x: 185, y: 177 },
               { icon: 'candado', label: 'GUARDARROPÍA', x: 246, y: 177 }
             ]
           },
           { id: 'p1-sedile', name: 'ALIMENTACIÓN Y SEDILE', x: 92, y: 252, w: 186, h: 40, color: PALETTE.green, icon: 'ballena' },
           {
-            id: 'p1-casino',
-            name: 'CASINO',
-            x: 116, y: 336, w: 64, h: 52,
+            id: 'p1-casino', name: 'CASINO', x: 116, y: 336, w: 64, h: 52,
             customPath: 'M 116 336 H 180 V 388 H 156 V 376 H 116 Z',
-            iconPos: { x: 154, y: 353 },
-            textPos: { x: 154, y: 371 },
-            color: PALETTE.green,
-            icon: 'cubiertos'
+            iconPos: { x: 154, y: 353 }, textPos: { x: 154, y: 371 }, color: PALETTE.green, icon: 'cubiertos'
           },
           { id: 'p1-hemo', name: 'HEMODIÁLISIS', x: 186, y: 336, w: 92, h: 52, color: PALETTE.purple, icon: 'pinguino' },
           {
-            id: 'p1-imagen',
-            name: 'IMAGENOLOGÍA',
-            x: 116, y: 434, w: 162, h: 56,
+            id: 'p1-imagen', name: 'IMAGENOLOGÍA', x: 116, y: 434, w: 162, h: 56,
             customPath: 'M 258 394 H 278 V 474 H 228 V 490 H 158 V 474 H 116 V 440 H 258 Z',
-            iconPos: { x: 192, y: 456 },
-            textPos: { x: 192, y: 476 },
-            color: PALETTE.purple,
-            icon: 'foca'
+            iconPos: { x: 192, y: 456 }, textPos: { x: 192, y: 476 }, color: PALETTE.purple, icon: 'foca'
           },
           {
-            id: 'p1-urg',
-            name: 'UNIDAD DE EMERGENCIA',
-            x: 54, y: 440, w: 224, h: 178,
+            id: 'p1-urg', name: 'UNIDAD DE EMERGENCIA', x: 54, y: 440, w: 224, h: 178,
             customPath: 'M 92 440 H 110 V 480 H 152 V 538 H 258 V 480 H 278 V 618 H 166 V 580 H 54 V 554 H 92 Z',
-            iconPos: { x: 196, y: 550 },
-            textPos: { x: 196, y: 569 },
-            color: PALETTE.red,
-            icon: 'ballenaCruz'
+            iconPos: { x: 196, y: 550 }, textPos: { x: 196, y: 569 }, color: PALETTE.red, icon: 'ballenaCruz'
           }
         ]
       },
       2: {
         num: 2,
         title: 'PISO 2',
-        colorHex: PALETTE.orange,
         perimeterOuter: 'M 86 24 H 284 V 54 H 334 V 352 H 362 V 402 H 334 V 634 H 126 V 586 H 32 V 54 H 86 Z',
         perimeterInner: 'M 92 30 H 278 V 60 H 328 V 358 H 356 V 396 H 328 V 628 H 132 V 580 H 38 V 60 H 92 Z',
         corridorPath: 'M 284 68 H 320 V 358 H 350 V 396 H 320 V 620 H 140 V 572 H 284 V 230 H 242 V 196 H 284 V 142 H 262 V 108 H 284 Z',
@@ -562,120 +691,72 @@
           { id: 'p2-hdia', name: 'HOSPITAL DE DÍA', x: 92, y: 68, w: 186, h: 36, color: PALETTE.blue, icon: 'copihue' },
           { id: 'p2-proc', name: 'PROCEDIMIENTOS', x: 92, y: 146, w: 186, h: 42, color: PALETTE.blue, icon: 'pudu' },
           {
-            id: 'p2-medfis',
-            name: 'MEDICINA FÍSICA Y REHABILITACIÓN',
-            x: 92, y: 196, w: 102, h: 90,
+            id: 'p2-medfis', name: 'MEDICINA FÍSICA Y REHABILITACIÓN', x: 92, y: 196, w: 102, h: 90,
             customPath: 'M 92 196 H 116 V 234 H 194 V 286 H 92 Z',
-            iconPos: { x: 143, y: 248 },
-            textPos: { x: 143, y: 268 },
-            color: PALETTE.blue,
-            icon: 'araucaria'
+            iconPos: { x: 143, y: 248 }, textPos: { x: 143, y: 268 }, color: PALETTE.blue, icon: 'araucaria'
           },
           { id: 'p2-trauma', name: 'TRAUMATOLOGÍA', x: 200, y: 234, w: 78, h: 52, color: PALETTE.blue, icon: 'araucaria' },
           {
-            id: 'p2-farm',
-            name: 'FARMACIA, LABORATORIO Y MED. TRANSFUSIONAL',
-            x: 92, y: 332, w: 186, h: 102,
+            id: 'p2-farm', name: 'FARMACIA, LABORATORIO Y MED. TRANSFUSIONAL', x: 92, y: 332, w: 186, h: 102,
             customPath: 'M 92 332 H 278 V 388 H 140 V 434 H 92 Z',
-            iconPos: { x: 185, y: 348 },
-            textPos: { x: 185, y: 367 },
-            color: PALETTE.orange,
-            icon: 'volcan'
+            iconPos: { x: 185, y: 348 }, textPos: { x: 185, y: 367 }, color: PALETTE.orange, icon: 'volcan'
           },
           { id: 'p2-adm', name: 'ADMISIÓN', x: 242, y: 394, w: 36, h: 120, color: PALETTE.orange, icon: 'arbol' },
           { id: 'p2-condor', name: 'HABITACIONES CÓNDOR', x: 92, y: 440, w: 144, h: 40, color: PALETTE.orange, icon: 'condor' },
           {
-            id: 'p2-gorro',
-            name: 'HABITACIONES GORRITO DE LANA',
-            x: 92, y: 526, w: 112, h: 38,
+            id: 'p2-gorro', name: 'HABITACIONES GORRITO DE LANA', x: 92, y: 526, w: 112, h: 38,
             customPath: 'M 92 526 H 192 V 536 H 204 V 564 H 92 Z',
-            iconPos: { x: 146, y: 539 },
-            textPos: { x: 146, y: 554 },
-            color: PALETTE.orange,
-            icon: 'gorro'
+            iconPos: { x: 146, y: 539 }, textPos: { x: 146, y: 554 }, color: PALETTE.orange, icon: 'gorro'
           },
           {
-            id: 'p2-muestras',
-            name: 'TOMA DE MUESTRAS',
-            x: 196, y: 524, w: 82, h: 40,
+            id: 'p2-muestras', name: 'TOMA DE MUESTRAS', x: 196, y: 524, w: 82, h: 40,
             customPath: 'M 196 524 H 278 V 564 H 210 V 532 H 196 Z',
-            iconPos: { x: 244, y: 537 },
-            textPos: { x: 244, y: 553 },
-            color: PALETTE.orange,
-            icon: 'picaflor'
+            iconPos: { x: 244, y: 537 }, textPos: { x: 244, y: 553 }, color: PALETTE.orange, icon: 'picaflor'
           }
         ]
       },
       3: {
         num: 3,
         title: 'PISO 3',
-        colorHex: PALETTE.blue,
-        perimeterOuter: 'M 32 28 H 334 V 356 H 362 V 402 H 334 V 632 H 32 Z',
-        perimeterInner: 'M 38 34 H 328 V 362 H 356 V 396 H 328 V 626 H 38 Z',
-        corridorPath: 'M 284 44 H 320 V 362 H 350 V 396 H 320 V 618 H 284 V 332 H 262 V 296 H 284 V 230 H 236 V 188 H 284 V 136 H 262 V 100 H 284 Z',
-        corridorTextY: 422,
-        mainElevator: { x: 324, y: 379 },
-        secondaryElevators: [{ x: 302, y: 158 }],
+        perimeterOuter: 'M 32 30 H 334 V 358 H 362 V 402 H 334 V 632 H 32 Z',
+        perimeterInner: 'M 38 36 H 328 V 364 H 356 V 396 H 328 V 626 H 38 Z',
+        corridorPath: 'M 284 44 H 320 V 364 H 350 V 396 H 320 V 618 H 284 V 230 H 262 V 196 H 284 V 136 H 262 V 102 H 284 Z',
+        corridorTextY: 392,
+        mainElevator: { x: 324, y: 380 },
+        secondaryElevators: [{ x: 302, y: 162 }],
         patios: [
-          { x: 92, y: 100, w: 164, h: 36 },
-          { x: 118, y: 188, w: 112, h: 36 },
-          { x: 92, y: 296, w: 164, h: 36 },
-          { x: 138, y: 400, w: 94, h: 34 },
-          { x: 120, y: 500, w: 112, h: 38 }
+          { x: 92, y: 102, w: 164, h: 34 },
+          { x: 92, y: 196, w: 164, h: 34 },
+          { x: 92, y: 294, w: 186, h: 32 },
+          { x: 126, y: 492, w: 118, h: 52 }
         ],
         extras: [
-          { type: 'badge', x: 273, y: 109, text: '♿' },
-          { type: 'badge', x: 273, y: 126, text: '🚻' },
-          { type: 'badge', x: 302, y: 244, text: '🪜' },
-          { type: 'badge', x: 302, y: 262, text: '🚻' },
-          { type: 'badge', x: 302, y: 280, text: '👶' },
-          { type: 'badge', x: 273, y: 280, text: '☕' },
-          { type: 'badge', x: 273, y: 305, text: '👶' },
-          { type: 'badge', x: 273, y: 322, text: '🚻' },
-          { type: 'badge', x: 302, y: 586, text: '👶' },
-          { type: 'badge', x: 302, y: 604, text: '🚻' }
+          { type: 'badge', x: 273, y: 111, text: '♿' },
+          { type: 'badge', x: 273, y: 127, text: '🚻' },
+          { type: 'badge', x: 302, y: 246, text: '🪜' },
+          { type: 'badge', x: 302, y: 264, text: '🚻' },
+          { type: 'badge', x: 302, y: 282, text: '👶' },
+          { type: 'badge', x: 273, y: 302, text: '👶' },
+          { type: 'badge', x: 273, y: 318, text: '🚻' },
+          { type: 'badge', x: 302, y: 584, text: '👶' },
+          { type: 'badge', x: 302, y: 602, text: '🚻' }
         ],
         blocks: [
-          { id: 'p3-uvas', name: 'CONSULTAS Y PROCEDIMIENTOS', x: 118, y: 44, w: 160, h: 48, color: PALETTE.blue, icon: 'uvas' },
-          { id: 'p3-zanahoria', name: 'CONSULTAS', x: 92, y: 142, w: 186, h: 40, color: PALETTE.blue, icon: 'zanahoria' },
-          { id: 'p3-gallo', name: 'CONSULTAS Y PROCEDIMIENTOS', x: 92, y: 238, w: 164, h: 50, color: PALETTE.blue, icon: 'gallo' },
-          { id: 'p3-corta', name: 'CORTA ESTADÍA', x: 92, y: 342, w: 186, h: 50, color: PALETTE.orange, icon: 'oveja' },
+          { id: 'p3-cardio', name: 'CARDIOLOGÍA INFANTIL', x: 92, y: 44, w: 186, h: 52, color: PALETTE.blue, icon: 'zanahoria' },
+          { id: 'p3-gallo', name: 'HABITACIONES GALLO', x: 92, y: 142, w: 186, h: 48, color: PALETTE.orange, icon: 'gallo' },
+          { id: 'p3-oveja', name: 'HABITACIONES OVEJA', x: 92, y: 236, w: 186, h: 52, color: PALETTE.orange, icon: 'oveja' },
+          { id: 'p3-caballo', name: 'HABITACIONES CABALLO', x: 92, y: 332, w: 186, h: 44, color: PALETTE.orange, icon: 'caballo' },
+          { id: 'p3-tractor', name: 'HABITACIONES TRACTOR', x: 92, y: 382, w: 186, h: 44, color: PALETTE.yellow, icon: 'tractor' },
           {
-            id: 'p3-anat',
-            name: 'ANATOMÍA PATOLÓGICA Y ESTERILIZACIÓN',
-            x: 92, y: 442, w: 140, h: 50,
-            customPath: 'M 92 442 H 232 V 492 H 120 V 474 H 92 Z',
-            iconPos: { x: 168, y: 458 },
-            textPos: { x: 168, y: 475 },
-            color: PALETTE.yellow,
-            icon: 'caballo'
-          },
-          {
-            id: 'p3-cma',
-            name: 'CIRUGÍA MAYOR AMBULATORIA',
-            x: 204, y: 442, w: 74, h: 132,
-            customPath: 'M 238 442 H 278 V 574 H 204 V 556 H 238 Z',
-            iconPos: { x: 258, y: 492 },
-            textPos: { x: 258, y: 512 },
-            color: PALETTE.yellow,
-            icon: 'tractor'
-          },
-          {
-            id: 'p3-pab',
-            name: 'PABELLONES',
-            x: 92, y: 480, w: 186, h: 138,
-            customPath: 'M 92 480 H 114 V 544 H 198 V 580 H 278 V 618 H 92 Z',
-            iconPos: { x: 146, y: 572 },
-            textPos: { x: 146, y: 594 },
-            color: PALETTE.yellow,
-            icon: 'volantin'
+            id: 'p3-pabellon', name: 'PABELLÓN QUIRÚRGICO', x: 92, y: 432, w: 186, h: 186,
+            customPath: 'M 92 432 H 278 V 618 H 92 Z M 126 492 V 544 H 244 V 492 Z',
+            iconPos: { x: 185, y: 456 }, textPos: { x: 185, y: 477 }, color: PALETTE.red, icon: 'volantin'
           }
         ]
       },
       4: {
         num: 4,
         title: 'PISO 4',
-        colorHex: PALETTE.blue,
         perimeterOuter: 'M 32 28 H 334 V 356 H 362 V 402 H 334 V 632 H 32 Z',
         perimeterInner: 'M 38 34 H 328 V 362 H 356 V 396 H 328 V 626 H 38 Z',
         corridorPath: 'M 284 42 H 320 V 362 H 350 V 396 H 320 V 618 H 284 V 326 H 262 V 292 H 284 V 136 H 262 V 102 H 284 Z',
@@ -707,21 +788,15 @@
           { id: 'p4-onco', name: 'ONCOLOGÍA AMBULATORIA', x: 192, y: 232, w: 86, h: 52, color: PALETTE.blue, icon: 'estrella' },
           { id: 'p4-hab', name: 'HABITACIONES FLOR TIPANIE', x: 92, y: 334, w: 186, h: 50, color: PALETTE.orange, icon: 'flor' },
           {
-            id: 'p4-upc',
-            name: 'UPC',
-            x: 92, y: 430, w: 186, h: 188,
+            id: 'p4-upc', name: 'UPC', x: 92, y: 430, w: 186, h: 188,
             customPath: 'M 92 430 H 278 V 618 H 92 Z M 126 496 V 548 H 244 V 496 Z',
-            iconPos: { x: 185, y: 456 },
-            textPos: { x: 185, y: 478 },
-            color: PALETTE.red,
-            icon: 'pez'
+            iconPos: { x: 185, y: 456 }, textPos: { x: 185, y: 478 }, color: PALETTE.red, icon: 'pez'
           }
         ]
       },
       5: {
         num: 5,
         title: 'PISO 5',
-        colorHex: PALETTE.orange,
         perimeterOuter: 'M 32 48 H 334 V 114 H 362 V 162 H 334 V 560 H 32 Z',
         perimeterInner: 'M 38 54 H 328 V 120 H 356 V 156 H 328 V 554 H 38 Z',
         corridorPath: 'M 284 64 H 320 V 120 H 350 V 156 H 320 V 544 H 284 Z',
@@ -744,134 +819,291 @@
       }
     };
 
-    // 5 Casos de ejemplo (1 por cada piso del hospital: Pisos 1 al 5)
-    const pacientesDB = {
-      "24.567.890-1": {
-        dob: "2019-05-14",
-        nombre: "Sofía Rojas Morales (7 años)",
-        prestaciones: [
-          {
-            nombre: "Ecografía Abdominal Pediátrica",
-            fecha: "Jueves 26 Nov, 2026 • 09:30 hrs",
-            piso: 1,
-            targetBlockId: "p1-imagen",
-            sectorLabel: "Sector Foca (Color Morado) — Imagenología",
-            requierePrep: true,
-            preparacion: "AYUNO ESTRICTO DE 6 HORAS: No comer alimentos sólidos, leche ni jugos desde las 03:30 hrs. Solo puede tomar pequeños sorbos de agua pura.",
-            documentos: [
-              "Orden médica original (impresa o digital).",
-              "Cédula de identidad del paciente pediátrico."
-            ],
-            ruta: [
-              "1. Busque los Ascensores Principales como punto de inicio y baje al Piso 1.",
-              "2. Al salir al Pasillo Principal del Piso 1, gire hacia su izquierda siguiendo las indicaciones hacia el sector color MORADO.",
-              "3. Ubique el bloque con el ícono de la FOCA (Imagenología) y anuncie su llegada en el mesón."
-            ]
-          }
-        ]
+    const DEMO_PATIENTS = [
+      {
+        rut: '24.567.890-1',
+        dob: '2019-05-14',
+        name: 'Sofía Valentina Rojas Pérez',
+        age: '7 años',
+        date: 'Jueves 26 Nov',
+        time: '09:30 hrs',
+        specialty: 'Imagenología — Ecografía Abdominal',
+        floor: 1,
+        sectorName: 'Sector Foca • Imagenología',
+        motif: '🦭 Foca (Morado — Piso 1)',
+        blockId: 'p1-imagen',
+        badgeColor: PALETTE.purple,
+        indications: [
+          'Ayuno estricto de 4 horas previo al examen (solo pequeños sorbos de agua si el médico lo indicó).',
+          'Llegar 15 minutos antes para confirmar ingreso en mesón del sector.'
+        ],
+        documents: [
+          'Cédula de identidad o certificado de nacimiento del paciente.',
+          'Carnet o cédula del adulto responsable acompañante.',
+          'Orden de examen médico vigente.'
+        ],
+        steps: [
+          'Ingresa por la entrada principal del hospital y sube al <strong>Piso 1</strong> por los <strong>Ascensores Principales</strong>.',
+          'Al salir del ascensor, gira hacia el <strong>Pasillo Principal</strong> avanzando hacia el sur.',
+          'Continúa bordeando los patios de luz interiores hasta el bloque morado de <strong>Imagenología</strong> (ícono de <strong>Foca</strong>).'
+        ],
+        tip: 'En el Piso 1 la señalética usa tonos morados y verdes con fauna austral; el bloque de Imagenología está justo sobre el sector de Emergencia.'
       },
-      "25.111.222-3": {
-        dob: "2021-08-22",
-        nombre: "Mateo Pérez Silva (5 años)",
-        prestaciones: [
-          {
-            nombre: "Toma de Muestras (Exámenes de Sangre)",
-            fecha: "Viernes 27 Nov, 2026 • 08:15 hrs",
-            piso: 2,
-            targetBlockId: "p2-muestras",
-            sectorLabel: "Sector Picaflor (Color Naranjo) — Toma de Muestras",
-            requierePrep: true,
-            preparacion: "AYUNO DE 8 HORAS: Última comida a las 00:15 hrs. Trae una colación en el bolso para darle inmediatamente después del examen.",
-            documentos: [
-              "Orden de exámenes emitida por el médico.",
-              "Cédula de identidad o certificado de nacimiento."
-            ],
-            ruta: [
-              "1. Busque los Ascensores Principales del Piso 2 como punto de inicio.",
-              "2. Avance por el Pasillo Principal hacia el sector color NARANJO (pasando Admisión).",
-              "3. Al fondo del pasillo ubique el ícono del PICAFLOR (Toma de Muestras) y saque número preferencial."
-            ]
-          }
-        ]
+      {
+        rut: '25.111.222-3',
+        dob: '2021-08-22',
+        name: 'Mateo Alonso Morales Soto',
+        age: '5 años',
+        date: 'Jueves 26 Nov',
+        time: '08:15 hrs',
+        specialty: 'Toma de Muestras — Perfil Bioquímico',
+        floor: 2,
+        sectorName: 'Sector Picaflor • Toma de Muestras',
+        motif: '🐦 Picaflor (Naranjo — Piso 2)',
+        blockId: 'p2-muestras',
+        badgeColor: PALETTE.orange,
+        indications: [
+          'Mantener ayuno de 8 horas (si es lactante o preescolar pequeño, consultar horario exacto con enfermería).',
+          'Traer al niño con ropa de manga corta o de fácil subida en el brazo.'
+        ],
+        documents: [
+          'Cédula de identidad del paciente y del acompañante.',
+          'Orden médica de exámenes de laboratorio.'
+        ],
+        steps: [
+          'Desde la bahía de <strong>Ascensores Principales</strong> en el Piso 2, avanza hacia el sur por el <strong>Pasillo Principal</strong>.',
+          'Pasa frente al sector de <strong>Admisión</strong> y continúa hacia el extremo inferior del pasillo.',
+          'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Picaflor</strong>).'
+        ],
+        tip: 'El Piso 2 corresponde a la entrada principal del hospital; Toma de Muestras queda en la esquina inferior derecha del plano.'
       },
-      "23.888.999-4": {
-        dob: "2017-03-10",
-        nombre: "Lucas Muñoz Soto (9 años)",
-        prestaciones: [
-          {
-            nombre: "Consulta Cardiología Infantil + ECG",
-            fecha: "Lunes 30 Nov, 2026 • 10:45 hrs",
-            piso: 3,
-            targetBlockId: "p3-zanahoria",
-            sectorLabel: "Sector Zanahoria (Color Azul) — Consultas",
-            requierePrep: false,
-            preparacion: "SIN AYUNO: El niño puede desayunar normalmente. Acudir con polera holgada y sin cremas corporales en el pecho para facilitar el electrocardiograma.",
-            documentos: [
-              "Carnet de control o interconsulta.",
-              "Cédula de identidad del paciente.",
-              "Exámenes cardiológicos anteriores (si tiene)."
-            ],
-            ruta: [
-              "1. Busque los Ascensores Principales como punto de inicio y suba al Piso 3 (saldrá frente a Corta Estadía).",
-              "2. Avance por el Pasillo Principal hacia el sector medio-alto de color AZUL (pasando el bloque del Gallo).",
-              "3. Identifique el ícono de la ZANAHORIA (Consultas) y regístrese en recepción."
-            ]
-          }
-        ]
+      {
+        rut: '23.888.999-4',
+        dob: '2017-03-10',
+        name: 'Emilia Paz Contreras Díaz',
+        age: '9 años',
+        date: 'Viernes 27 Nov',
+        time: '10:45 hrs',
+        specialty: 'Cardiología Infantil — Control y ECG',
+        floor: 3,
+        sectorName: 'Sector Zanahoria • Cardiología Infantil',
+        motif: '🥕 Zanahoria (Azul — Piso 3)',
+        blockId: 'p3-cardio',
+        badgeColor: PALETTE.blue,
+        indications: [
+          'No aplicar crema corporal ni aceites en el pecho el día del control para facilitar la adhesión de electrodos.',
+          'Llevar polera cómoda y traer controles o exámenes cardiológicos previos.'
+        ],
+        documents: [
+          'Cédula de identidad del paciente y del tutor legal.',
+          'Carnet de control cardiológico o derivación.'
+        ],
+        steps: [
+          'Sube al <strong>Piso 3</strong> en los <strong>Ascensores Principales</strong>.',
+          'Camina hacia el norte por el <strong>Pasillo Principal</strong> pasando junto a los patios de luz y habitaciones.',
+          'Al llegar al extremo superior del piso verás el bloque azul de <strong>Cardiología Infantil</strong> (ícono de <strong>Zanahoria</strong>).'
+        ],
+        tip: 'Cardiología Infantil está ubicada en la zona superior del Piso 3, en sentido opuesto al Pabellón Quirúrgico.'
       },
-      "22.444.555-6": {
-        dob: "2015-11-30",
-        nombre: "Martina González Díaz (11 años)",
-        prestaciones: [
-          {
-            nombre: "Control Oncología Ambulatoria",
-            fecha: "Martes 01 Dic, 2026 • 09:00 hrs",
-            piso: 4,
-            targetBlockId: "p4-onco",
-            sectorLabel: "Sector Estrella de Mar (Color Azul) — Oncología Ambulatoria",
-            requierePrep: true,
-            preparacion: "USO DE MASCARILLA: Acudir con mascarilla quirúrgica limpia tanto el paciente como su acompañante antes de ingresar a la sala de espera.",
-            documentos: [
-              "Cédula de identidad del paciente.",
-              "Carnet de tratamiento oncológico.",
-              "Recetario o listado de medicamentos actuales."
-            ],
-            ruta: [
-              "1. Busque los Ascensores Principales como punto de inicio y suba al Piso 4.",
-              "2. Al salir al Pasillo Principal, avance hacia el bloque medio de color AZUL.",
-              "3. Identifique el ícono de la ESTRELLA DE MAR (Oncología Ambulatoria) junto al pasillo."
-            ]
-          }
-        ]
+      {
+        rut: '22.444.555-6',
+        dob: '2015-11-30',
+        name: 'Lucas Tomás Fuentes Herrera',
+        age: '10 años',
+        date: 'Viernes 27 Nov',
+        time: '11:20 hrs',
+        specialty: 'Oncología Ambulatoria — Control Médico',
+        floor: 4,
+        sectorName: 'Sector Estrella de Mar • Oncología Ambulatoria',
+        motif: '⭐ Estrella de Mar (Azul — Piso 4)',
+        blockId: 'p4-onco',
+        badgeColor: PALETTE.blue,
+        indications: [
+          'Uso obligatorio de mascarilla clínica durante toda la permanencia en el sector.',
+          'Si el paciente presenta fiebre sobre 37,8 °C o síntomas respiratorios, avisar antes de ingresar.'
+        ],
+        documents: [
+          'Cédula de identidad del paciente y adulto responsable.',
+          'Credencial o carpeta de seguimiento oncológico.'
+        ],
+        steps: [
+          'Llega al <strong>Piso 4</strong> mediante los <strong>Ascensores Principales</strong>.',
+          'Avanza hacia el norte por el <strong>Pasillo Principal</strong> pasando el sector de Administración.',
+          'A mano izquierda verás el bloque azul de <strong>Oncología Ambulatoria</strong> (ícono de <strong>Estrella de Mar</strong>), junto a Colegios.'
+        ],
+        tip: 'En el Piso 4 la temática es costera; Oncología Ambulatoria se identifica con el ícono de Estrella de Mar en tono azul.'
       },
-      "21.777.888-9": {
-        dob: "2018-09-05",
-        nombre: "Tomás Herrera Castro (8 años)",
-        prestaciones: [
-          {
-            nombre: "Ingreso Programado / Pre-hospitalización",
-            fecha: "Miércoles 02 Dic, 2026 • 11:00 hrs",
-            piso: 5,
-            targetBlockId: "p5-alpaca",
-            sectorLabel: "Sector Alpaca (Color Naranjo) — Habitaciones",
-            requierePrep: true,
-            preparacion: "PREPARACIÓN DE INGRESO: Realizar baño completo previo en domicilio, uñas cortas y limpias sin esmalte. Traer bolso pequeño con útiles de aseo personal.",
-            documentos: [
-              "Orden de hospitalización emitida por especialista.",
-              "Cédula de identidad del menor y del adulto responsable.",
-              "Exámenes preoperatorios realizados."
-            ],
-            ruta: [
-              "1. Busque los Ascensores Principales como punto de inicio (previo paso por Admisión Piso 2) y suba al Piso 5.",
-              "2. Al salir en el extremo superior del Pasillo Principal del Piso 5, gire hacia el sector NARANJO.",
-              "3. Ingrese al primer bloque identificado con el ícono de la ALPACA (Habitaciones)."
-            ]
-          }
-        ]
+      {
+        rut: '21.777.888-9',
+        dob: '2018-09-05',
+        name: 'Isidora Ignacia Castro Muñoz',
+        age: '8 años',
+        date: 'Lunes 30 Nov',
+        time: '15:00 hrs',
+        specialty: 'Hospitalización Pediátrica — Visita / Ingreso',
+        floor: 5,
+        sectorName: 'Sector Alpaca • Habitaciones Alpaca',
+        motif: '🦙 Alpaca (Naranjo — Piso 5)',
+        blockId: 'p5-alpaca',
+        badgeColor: PALETTE.orange,
+        indications: [
+          'Máximo 2 acompañantes por paciente y lavado o higienización de manos al entrar a la habitación.',
+          'Evitar traer objetos de valor o juguetes grandes que dificulten la atención clínica.'
+        ],
+        documents: [
+          'Cédula de identidad del paciente y de los acompañantes.',
+          'Pase de visita o indicación de hospitalización.'
+        ],
+        steps: [
+          'Sube al <strong>Piso 5</strong> en los <strong>Ascensores Principales</strong> (ubicados en la parte superior del pasillo).',
+          'Ingresa desde el pasillo hacia el sector naranjo superior de <strong>Habitaciones Alpaca</strong>.',
+          'Sigue la numeración de habitación indicada en enfermería (ícono de <strong>Alpaca</strong>).'
+        ],
+        tip: 'El Piso 5 está dedicado a hospitalización con motivos del altiplano (Alpaca, Flamenco y Desierto Florido).'
       }
-    };
+    ];
 
-    let pacienteActual = null;
+    let activePatient = DEMO_PATIENTS[0];
+
+    function normalizeRut(rut) {
+      return (rut || '').replace(/[^0-9kK]/g, '').toUpperCase();
+    }
+
+    function formatRutInput(input) {
+      const clean = normalizeRut(input.value);
+      if (clean.length <= 1) {
+        input.value = clean;
+        return;
+      }
+      const body = clean.slice(0, -1);
+      const dv = clean.slice(-1);
+      const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+      input.value = `${formattedBody}-${dv}`;
+    }
+
+    function toggleDemoDrawer() {
+      const drawer = document.getElementById('demo-drawer');
+      const chevron = document.getElementById('demo-chevron');
+      const isHidden = drawer.classList.toggle('hidden');
+      chevron.textContent = isHidden ? '⌄' : '⌃';
+    }
+
+    function fillDemoPatient(index) {
+      const p = DEMO_PATIENTS[index];
+      document.getElementById('rut-input').value = p.rut;
+      document.getElementById('dob-input').value = p.dob;
+      document.getElementById('login-error').classList.add('hidden');
+      activePatient = p;
+      renderSummary(p);
+      renderMap(p);
+      goToView('summary');
+    }
+
+    function handleLoginSubmit(event) {
+      event.preventDefault();
+      const rawRut = document.getElementById('rut-input').value.trim();
+      const dob = document.getElementById('dob-input').value;
+      const errorEl = document.getElementById('login-error');
+
+      if (!rawRut || !dob) {
+        errorEl.textContent = 'Por favor ingresa el RUT del paciente y su fecha de nacimiento.';
+        errorEl.classList.remove('hidden');
+        return;
+      }
+
+      const cleanInputRut = normalizeRut(rawRut);
+      const matched = DEMO_PATIENTS.find(p => normalizeRut(p.rut) === cleanInputRut && p.dob === dob);
+
+      if (matched) {
+        errorEl.classList.add('hidden');
+        activePatient = matched;
+      } else {
+        const byRutOnly = DEMO_PATIENTS.find(p => normalizeRut(p.rut) === cleanInputRut);
+        const base = byRutOnly || DEMO_PATIENTS[0];
+        const formattedDob = dob.split('-').reverse().join('/');
+        errorEl.classList.add('hidden');
+        activePatient = {
+          ...base,
+          rut: rawRut,
+          dob: dob,
+          name: byRutOnly ? base.name : `Paciente RUT ${rawRut}`,
+          age: `Nac. ${formattedDob}`
+        };
+      }
+
+      renderSummary(activePatient);
+      renderMap(activePatient);
+      goToView('summary');
+    }
+
+    function goToView(viewName) {
+      const loginView = document.getElementById('view-login');
+      const summaryView = document.getElementById('view-summary');
+      const mapView = document.getElementById('view-map');
+      const innerHeader = document.getElementById('inner-header');
+
+      loginView.classList.add('hidden');
+      summaryView.classList.add('hidden');
+      mapView.classList.add('hidden');
+
+      if (viewName === 'login') {
+        loginView.classList.remove('hidden');
+        innerHeader.classList.add('hidden');
+      } else if (viewName === 'summary') {
+        summaryView.classList.remove('hidden');
+        innerHeader.classList.remove('hidden');
+      } else if (viewName === 'map') {
+        mapView.classList.remove('hidden');
+        innerHeader.classList.remove('hidden');
+        renderMap(activePatient);
+      }
+
+      document.querySelector('main').scrollTop = 0;
+    }
+
+    function renderSummary(p) {
+      document.getElementById('sum-patient-name').textContent = p.name;
+      document.getElementById('sum-patient-meta').textContent = `RUT: ${p.rut} • ${p.age}`;
+      document.getElementById('sum-date').textContent = p.date;
+      document.getElementById('sum-time').textContent = p.time;
+      document.getElementById('sum-specialty').textContent = p.specialty;
+      document.getElementById('sum-location').textContent = `Piso ${p.floor} • ${p.sectorName}`;
+
+      const badge = document.getElementById('sum-floor-badge');
+      badge.textContent = `PISO ${p.floor}`;
+      badge.style.backgroundColor = p.badgeColor;
+
+      document.getElementById('sum-indications').innerHTML = p.indications.map(item => `
+        <li class="flex items-start gap-2">
+          <span class="text-rose-600 font-black mt-0.5">•</span>
+          <span>${item}</span>
+        </li>
+      `).join('');
+
+      document.getElementById('sum-documents').innerHTML = p.documents.map(doc => `
+        <li class="flex items-start gap-2">
+          <span class="text-amber-700 font-black mt-0.5">✓</span>
+          <span>${doc}</span>
+        </li>
+      `).join('');
+    }
+
+    function wrapSvgText(text, maxChars) {
+      if (text.length <= maxChars) return [text];
+      const words = text.split(' ');
+      const lines = [];
+      let cur = '';
+      for (const w of words) {
+        if ((cur + ' ' + w).trim().length <= maxChars) {
+          cur = (cur + ' ' + w).trim();
+        } else {
+          if (cur) lines.push(cur);
+          cur = w;
+        }
+      }
+      if (cur) lines.push(cur);
+      return lines.slice(0, 3);
+    }
 
     function escapeXML(str) {
       return String(str)
@@ -881,32 +1113,12 @@
         .replace(/"/g, '&quot;');
     }
 
-    function wrapText(text, maxChars) {
-      if (text.length <= maxChars) return [text];
-      const words = text.split(' ');
-      const lines = [];
-      let current = '';
-      for (const w of words) {
-        if ((current + ' ' + w).trim().length <= maxChars) {
-          current = (current + ' ' + w).trim();
-        } else {
-          if (current) lines.push(current);
-          current = w;
-        }
-      }
-      if (current) lines.push(current);
-      return lines.slice(0, 3);
-    }
-
-    // Genera el SVG vectorial 1:1 del piso destacando el sector destino
-    function buildFloorSVG(floorNum, activeId) {
-      const floor = FLOORS_SVG_DATA[floorNum];
-
-      const patiosSVG = floor.patios.map(p => `
+    function buildFloorPlanSVG(floorData, targetBlockId) {
+      const patiosSVG = floorData.patios.map(p => `
         <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="3" fill="#FFFFFF" stroke="#1E293B" stroke-width="2" />
       `).join('');
 
-      const extrasSVG = (floor.extras || []).map(ex => {
+      const extrasSVG = (floorData.extras || []).map(ex => {
         if (ex.type === 'badge') {
           return `
             <g transform="translate(${ex.x}, ${ex.y})">
@@ -940,69 +1152,59 @@
         return '';
       }).join('');
 
-      const blocksSVG = floor.blocks.map(b => {
-        const isTarget = b.id === activeId;
-        const opacity = isTarget ? '1' : '0.42';
-        const stroke = isTarget ? '#FACC15' : 'none';
-        const strokeW = isTarget ? '3.5' : '0';
-        const animClass = isTarget ? 'class="dest-highlight"' : '';
+      let targetCenter = null;
+
+      const blocksSVG = floorData.blocks.map(b => {
+        const isTarget = b.id === targetBlockId;
+        const cx = b.iconPos ? b.iconPos.x : (b.x + b.w / 2);
+        const cy = b.iconPos ? b.iconPos.y : (b.y + b.h / 2 - (b.h > 55 ? 10 : 6));
+        if (isTarget) {
+          targetCenter = { x: cx, y: cy, boxX: b.x, boxY: b.y, boxW: b.w, boxH: b.h };
+        }
 
         const shapeSVG = b.customPath
-          ? `<path d="${b.customPath}" fill="${b.color}" fill-opacity="${opacity}" stroke="${stroke}" stroke-width="${strokeW}" ${animClass} />`
-          : `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5" fill="${b.color}" fill-opacity="${opacity}" stroke="${stroke}" stroke-width="${strokeW}" ${animClass} />`;
+          ? `<path d="${b.customPath}" fill="${b.color}" fill-opacity="${isTarget ? '1' : '0.86'}" stroke="${isTarget ? '#FACC15' : 'none'}" stroke-width="${isTarget ? '3.5' : '0'}" />`
+          : `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5" fill="${b.color}" fill-opacity="${isTarget ? '1' : '0.86'}" stroke="${isTarget ? '#FACC15' : 'none'}" stroke-width="${isTarget ? '3.5' : '0'}" />`;
 
-        let innerContentSVG = '';
+        let innerSVG = '';
         if (b.multiIcons) {
-          innerContentSVG = b.multiIcons.map(mi => {
-            const subLines = wrapText(mi.label, 14);
-            return `
-              <g transform="translate(${mi.x}, ${mi.y}) scale(0.72)">
-                ${ICONS[mi.icon] || ''}
-              </g>
-              ${subLines.map((l, i) => `
-                <text x="${mi.x}" y="${mi.y + 16 + i * 7}" text-anchor="middle" fill="#FFFFFF" fill-opacity="${isTarget ? '1' : '0.8'}" font-family="Inter, sans-serif" font-weight="700" font-size="5.4px">${escapeXML(l)}</text>
-              `).join('')}
-            `;
-          }).join('');
+          innerSVG = b.multiIcons.map(mi => `
+            <g transform="translate(${mi.x}, ${mi.y}) scale(0.72)">${ICONS[mi.icon] || ''}</g>
+            <text x="${mi.x}" y="${mi.y + 16}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="5.4px">${escapeXML(mi.label)}</text>
+          `).join('');
         } else {
-          const cx = b.iconPos ? b.iconPos.x : (b.x + b.w / 2);
-          const cy = b.iconPos ? b.iconPos.y : (b.y + b.h / 2 - (b.h > 55 ? 10 : 6));
           const tx = b.textPos ? b.textPos.x : (b.x + b.w / 2);
           const ty = b.textPos ? b.textPos.y : (cy + 18);
-
-          const maxChars = Math.max(9, Math.floor(b.w / 5.2));
-          const lines = wrapText(b.name, maxChars);
+          const lines = wrapSvgText(b.name, Math.max(9, Math.floor(b.w / 5.2)));
           const fontSize = b.w < 75 ? 6.0 : 7.2;
 
-          const textLinesSVG = lines.map((line, idx) => `
-            <text x="${tx}" y="${ty + idx * (fontSize + 1.8)}" text-anchor="middle" fill="#FFFFFF" fill-opacity="${isTarget ? '1' : '0.85'}" font-family="Inter, sans-serif" font-weight="700" font-size="${fontSize}px" letter-spacing="0.2">${escapeXML(line)}</text>
-          `).join('');
-
-          innerContentSVG = `
-            <g transform="translate(${cx}, ${cy}) scale(${b.h < 45 ? 0.72 : 0.85})">
-              ${ICONS[b.icon] || ''}
-            </g>
-            ${textLinesSVG}
+          innerSVG = `
+            <g transform="translate(${cx}, ${cy}) scale(${b.h < 45 ? 0.72 : 0.85})">${ICONS[b.icon] || ''}</g>
+            ${lines.map((l, idx) => `
+              <text x="${tx}" y="${ty + idx * (fontSize + 1.8)}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="${fontSize}px">${escapeXML(l)}</text>
+            `).join('')}
           `;
         }
 
-        const badgeSVG = isTarget ? `
-          <g transform="translate(${b.x + b.w - 48}, ${b.y - 8})">
-            <rect x="0" y="0" width="48" height="15" rx="4" fill="#FACC15" stroke="#854D0E" stroke-width="1"/>
-            <text x="24" y="10.5" text-anchor="middle" fill="#1E293B" font-family="Inter, sans-serif" font-weight="900" font-size="7.2px">AQUÍ VAS</text>
+        const destTag = isTarget ? `
+          <g class="pulse-dest">
+            <rect x="${cx - 24.5}" y="${cy - 34.5}" width="49" height="12.5" rx="4" fill="#0F172A" stroke="#090D16" stroke-width="1.2"/>
+            <text x="${cx}" y="${cy - 25.8}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="7.6px">tu destino</text>
+            <path d="M ${cx} ${cy} C ${cx - 5} ${cy - 7} ${cx - 7} ${cy - 10} ${cx - 7} ${cy - 12} A 7 7 0 1 1 ${cx + 7} ${cy - 12} C ${cx + 7} ${cy - 10} ${cx + 5} ${cy - 7} ${cx} ${cy} Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.3"/>
+            <circle cx="${cx}" cy="${cy - 12}" r="2.4" fill="#FFFFFF"/>
           </g>
         ` : '';
 
-        return `
-          <g>
-            ${shapeSVG}
-            ${innerContentSVG}
-            ${badgeSVG}
-          </g>
-        `;
+        return `<g>${shapeSVG}${innerSVG}${destTag}</g>`;
       }).join('');
 
-      const secElevSVG = (floor.secondaryElevators || []).map(ev => `
+      const elev = floorData.mainElevator;
+      const routeLineSVG = targetCenter ? `
+        <path d="M ${elev.x - 10} ${elev.y} L 302 ${elev.y} L 302 ${targetCenter.y} L ${targetCenter.x} ${targetCenter.y}"
+          fill="none" stroke="#FACC15" stroke-width="3.2" stroke-dasharray="6 4" stroke-linecap="round" stroke-linejoin="round" />
+      ` : '';
+
+      const secElevSVG = (floorData.secondaryElevators || []).map(ev => `
         <g transform="translate(${ev.x}, ${ev.y})">
           <circle cx="0" cy="0" r="9.5" fill="#FFFFFF" stroke="#1E293B" stroke-width="1.4"/>
           <rect x="-3.8" y="-4.8" width="7.6" height="9.6" rx="1" fill="none" stroke="#1E293B" stroke-width="1.2"/>
@@ -1010,24 +1212,23 @@
         </g>
       `).join('');
 
-      const elev = floor.mainElevator;
-
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 660" class="w-full h-auto block select-none">
         <rect x="0" y="0" width="390" height="660" rx="14" fill="${PALETTE.board}" />
-        <text x="24" y="21" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11px" letter-spacing="0.4">${escapeXML(floor.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
+        <text x="24" y="21" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11px" letter-spacing="0.4">${escapeXML(floorData.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
 
-        <path d="${floor.perimeterOuter}" fill="#F8FAFC" stroke="#0F172A" stroke-width="2" />
-        <path d="${floor.perimeterInner}" fill="none" stroke="#1E293B" stroke-width="1.5" />
+        <path d="${floorData.perimeterOuter}" fill="#F8FAFC" stroke="#0F172A" stroke-width="2" />
+        <path d="${floorData.perimeterInner}" fill="none" stroke="#1E293B" stroke-width="1.5" />
 
         <text x="58" y="325" transform="rotate(-90 58 325)" text-anchor="middle" fill="#475569" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.5">ÁREA FUNCIONARIOS</text>
 
-        <path d="${floor.corridorPath}" fill="${PALETTE.corridor}" />
-        <text x="302" y="${floor.corridorTextY}" transform="rotate(-90 302 ${floor.corridorTextY})" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.4">PASILLO PRINCIPAL</text>
+        <path d="${floorData.corridorPath}" fill="${PALETTE.corridor}" />
+        <text x="302" y="${floorData.corridorTextY}" transform="rotate(-90 302 ${floorData.corridorTextY})" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.4">PASILLO PRINCIPAL</text>
 
         ${patiosSVG}
         ${blocksSVG}
         ${extrasSVG}
         ${secElevSVG}
+        ${routeLineSVG}
 
         <g transform="translate(${elev.x - 18}, ${elev.y - 16})">
           <rect x="0" y="0" width="56" height="32" rx="6" fill="#0369A1" stroke="#FACC15" stroke-width="2"/>
@@ -1037,159 +1238,28 @@
       </svg>`;
     }
 
-    function normalizarRut(rut) {
-      return rut.replace(/\./g, '').trim().toUpperCase();
+    function renderMap(p) {
+      const floorData = FLOOR_MAPS[p.floor] || FLOOR_MAPS[1];
+      document.getElementById('map-floor-pill').textContent = `PISO ${p.floor}`;
+      document.getElementById('map-floor-pill').style.backgroundColor = p.badgeColor;
+      document.getElementById('map-sector-label').textContent = p.sectorName;
+      document.getElementById('map-svg-wrapper').innerHTML = buildFloorPlanSVG(floorData, p.blockId);
+
+      document.getElementById('map-steps').innerHTML = p.steps.map((step, idx) => `
+        <li class="flex items-start gap-2.5">
+          <span class="w-5 h-5 rounded-full bg-sky-700 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
+          <span class="leading-relaxed">${step}</span>
+        </li>
+      `).join('');
+
+      document.getElementById('map-motif-badge').textContent = p.motif;
+      document.getElementById('map-tip').textContent = p.tip;
     }
 
-    function cargarDemo(rut, dob) {
-      document.getElementById('rut-input').value = rut;
-      document.getElementById('dob-input').value = dob;
-      consultarPaciente();
-    }
-
-    function consultarPaciente() {
-      const rutRaw = document.getElementById('rut-input').value;
-      const dobRaw = document.getElementById('dob-input').value;
-      const errorBox = document.getElementById('login-error');
-
-      errorBox.classList.add('hidden');
-
-      if (!rutRaw || !dobRaw) {
-        errorBox.textContent = "Por favor ingresa el RUT y la fecha de nacimiento del paciente.";
-        errorBox.classList.remove('hidden');
-        return;
-      }
-
-      const rutNorm = normalizarRut(rutRaw);
-      let encontrado = null;
-      let rutFormateado = "";
-
-      for (const [key, val] of Object.entries(pacientesDB)) {
-        if (normalizarRut(key) === rutNorm && val.dob === dobRaw) {
-          encontrado = val;
-          rutFormateado = key;
-          break;
-        }
-      }
-
-      if (!encontrado) {
-        errorBox.textContent = "No encontramos citas con ese RUT y fecha de nacimiento. Prueba con los ejemplos por piso de abajo.";
-        errorBox.classList.remove('hidden');
-        return;
-      }
-
-      pacienteActual = { ...encontrado, rut: rutFormateado };
-      renderLista();
-    }
-
-    function renderLista() {
-      document.getElementById('patient-name').textContent = pacienteActual.nombre;
-      document.getElementById('patient-rut').textContent = `RUT: ${pacienteActual.rut}`;
-
-      const container = document.getElementById('exams-container');
-      container.innerHTML = "";
-
-      pacienteActual.prestaciones.forEach(p => {
-        const floorInfo = FLOORS_SVG_DATA[p.piso];
-        const card = document.createElement('div');
-        card.className = "bg-white rounded-2xl p-4 shadow-sm border border-slate-200 cursor-pointer hover:shadow-md transition";
-        card.style.borderLeft = `6px solid ${floorInfo.colorHex}`;
-        card.onclick = () => renderDetalle(p);
-        card.innerHTML = `
-          <div class="flex items-start justify-between gap-2 mb-1.5">
-            <div class="text-sm font-extrabold text-slate-900">${p.nombre}</div>
-            <span class="text-[11px] font-extrabold text-white px-2.5 py-0.5 rounded-md whitespace-nowrap" style="background:${floorInfo.colorHex}">PISO ${p.piso}</span>
-          </div>
-          <div class="text-xs text-slate-600 space-y-0.5">
-            <div>📅 <strong>${p.fecha}</strong></div>
-            <div>📍 ${p.sectorLabel}</div>
-          </div>
-          <div class="mt-2.5 text-xs font-bold text-[#1B5E91] text-right">
-            Ver preparación y plano oficial →
-          </div>
-        `;
-        container.appendChild(card);
-      });
-
-      document.getElementById('view-login').classList.add('hidden');
-      document.getElementById('view-detail').classList.add('hidden');
-      document.getElementById('view-list').classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-
-    function renderDetalle(p) {
-      const floorInfo = FLOORS_SVG_DATA[p.piso];
-
-      document.getElementById('det-nombre').textContent = p.nombre;
-      const pill = document.getElementById('det-piso-pill');
-      pill.textContent = `PISO ${p.piso}`;
-      pill.style.backgroundColor = floorInfo.colorHex;
-
-      document.getElementById('det-meta').innerHTML = `
-        <div>📅 <strong>${p.fecha}</strong></div>
-        <div>📍 <strong>${p.sectorLabel}</strong></div>
-      `;
-
-      // 1. Indicaciones previas
-      const prepBox = document.getElementById('det-prep-box');
-      const prepTitle = document.getElementById('det-prep-title');
-      if (p.requierePrep) {
-        prepBox.className = "rounded-xl p-3.5 border-l-4 mb-3 bg-amber-50 border-amber-500 text-amber-950";
-        prepTitle.innerHTML = "⚠️ INDICACIONES PREVIAS OBLIGATORIAS";
-      } else {
-        prepBox.className = "rounded-xl p-3.5 border-l-4 mb-3 bg-emerald-50 border-emerald-600 text-emerald-950";
-        prepTitle.innerHTML = "✅ INDICACIONES PREVIAS";
-      }
-      document.getElementById('det-prep-text').textContent = p.preparacion;
-
-      // 2. Documentación necesaria
-      document.getElementById('det-docs').innerHTML = p.documentos
-        .map(d => `<li class="flex items-start gap-2"><span>✔️</span><span>${d}</span></li>`)
-        .join('');
-
-      // 3. Plano vectorial 1:1 del piso
-      document.getElementById('det-ubicacion-resumen').innerHTML = `
-        Dirígete al <strong>Piso ${p.piso}</strong> y ubica el sector destacado como <strong>${p.sectorLabel}</strong>:
-      `;
-      document.getElementById('det-svg-board').innerHTML = buildFloorSVG(p.piso, p.targetBlockId);
-
-      // 4. Paso a paso desde Ascensores Principales
-      document.getElementById('det-ruta-pasos').innerHTML = p.ruta
-        .map(step => `<div class="bg-slate-50 border border-slate-200/80 rounded-lg px-3 py-2 leading-relaxed">${step}</div>`)
-        .join('');
-
-      // Reset encuesta
-      document.querySelectorAll('.rate-btn').forEach(b => {
-        b.classList.remove('bg-sky-100', 'border-sky-500');
-      });
-      document.getElementById('rating-feedback').classList.add('hidden');
-
-      document.getElementById('view-list').classList.add('hidden');
-      document.getElementById('view-detail').classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-
-    function calificar(btn) {
-      document.querySelectorAll('.rate-btn').forEach(b => {
-        b.classList.remove('bg-sky-100', 'border-sky-500');
-      });
-      btn.classList.add('bg-sky-100', 'border-sky-500');
-      document.getElementById('rating-feedback').classList.remove('hidden');
-    }
-
-    function volverLista() {
-      document.getElementById('view-detail').classList.add('hidden');
-      document.getElementById('view-list').classList.remove('hidden');
-      window.scrollTo(0, 0);
-    }
-
-    function volverInicio() {
-      document.getElementById('view-list').classList.add('hidden');
-      document.getElementById('view-login').classList.remove('hidden');
-      document.getElementById('rut-input').value = "";
-      document.getElementById('dob-input').value = "";
-      window.scrollTo(0, 0);
-    }
+    window.onload = function () {
+      renderSummary(activePatient);
+      renderMap(activePatient);
+    };
   </script>
 </body>
 </html>
