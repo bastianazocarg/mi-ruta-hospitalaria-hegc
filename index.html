@@ -1660,14 +1660,16 @@
 
         <!-- Marcador de ubicación y etiqueta elevada "tu destino" al final de la ruta -->
         <g transform="translate(${targetArrival.x}, ${targetArrival.y})">
-          <ellipse cx="0" cy="1.5" rx="6.5" ry="2.5" fill="rgba(0,0,0,0.38)"/>
-          <path d="M 0 0 C -7.5 -10 -14 -16.5 -14 -24 A 14 14 0 1 1 14 -24 C 14 -16.5 7.5 -10 0 0 Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="2.1"/>
-          <circle cx="0" cy="-24" r="5.2" fill="#FFFFFF"/>
+          <g class="pulse-dest">
+            <ellipse cx="0" cy="1.5" rx="6.5" ry="2.5" fill="rgba(0,0,0,0.38)"/>
+            <path d="M 0 0 C -7.5 -10 -14 -16.5 -14 -24 A 14 14 0 1 1 14 -24 C 14 -16.5 7.5 -10 0 0 Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="2.1"/>
+            <circle cx="0" cy="-24" r="5.2" fill="#FFFFFF"/>
 
-          <!-- Cápsula elevada con borde negro y texto blanco más grande -->
-          <g transform="translate(0, -45)">
-            <rect x="-43" y="-19" width="86" height="22" rx="7" fill="#0F172A" stroke="#000000" stroke-width="2"/>
-            <text x="0" y="-4" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="12px" letter-spacing="0.2">tu destino</text>
+            <!-- Cápsula elevada con borde negro y texto blanco más grande -->
+            <g transform="translate(0, -45)">
+              <rect x="-43" y="-19" width="86" height="22" rx="7" fill="#0F172A" stroke="#000000" stroke-width="2"/>
+              <text x="0" y="-4" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="12px" letter-spacing="0.2">tu destino</text>
+            </g>
           </g>
         </g>
       ` : '';
