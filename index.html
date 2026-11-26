@@ -51,7 +51,7 @@
 
     @keyframes pulseMarker {
       0%, 100% { transform: scale(1); opacity: 1; }
-      50% { transform: scale(1.07); opacity: 0.82; }
+      50% { transform: scale(1.04); opacity: 0.85; }
     }
 
     .pulse-dest {
@@ -325,18 +325,18 @@
               </button>
             </form>
 
-            <!-- Accesos rápidos discretos para probar los 5 pisos -->
+            <!-- Accesos rápidos discretos para probar los 5 pisos y multi-examen -->
             <div class="mt-4 pt-3 border-t border-slate-200/80">
               <button
                 type="button"
                 onclick="toggleDemoDrawer()"
                 class="w-full flex items-center justify-between text-[11px] font-bold text-slate-500 hover:text-slate-700 uppercase tracking-wider"
               >
-                <span>🧪 Ejemplos rápidos por piso (1 al 5)</span>
+                <span>🧪 Ejemplos rápidos (Pisos 1 al 5 y Multi-examen)</span>
                 <span id="demo-chevron">⌄</span>
               </button>
 
-              <div id="demo-drawer" class="mt-2.5 grid grid-cols-5 gap-1.5">
+              <div id="demo-drawer" class="mt-2.5 grid grid-cols-3 gap-1.5">
                 <button type="button" onclick="fillDemoPatient(0)" class="py-1.5 px-1 rounded-xl bg-purple-50 hover:bg-purple-100 border border-purple-200 text-center transition">
                   <span class="block text-sm">🦭</span>
                   <span class="block text-[10px] font-extrabold text-purple-900">Piso 1</span>
@@ -356,6 +356,10 @@
                 <button type="button" onclick="fillDemoPatient(4)" class="py-1.5 px-1 rounded-xl bg-orange-50 hover:bg-orange-100 border border-orange-200 text-center transition">
                   <span class="block text-sm">🦙</span>
                   <span class="block text-[10px] font-extrabold text-orange-900">Piso 5</span>
+                </button>
+                <button type="button" onclick="fillDemoPatient(5)" class="py-1.5 px-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-center transition">
+                  <span class="block text-sm">📋</span>
+                  <span class="block text-[10px] font-extrabold text-emerald-900">2 Pisos (2)</span>
                 </button>
               </div>
             </div>
@@ -395,111 +399,178 @@
         </div>
       </section>
 
-      <!-- VISTA 2: RESUMEN DE CITACIÓN, INDICACIONES Y DOCUMENTACIÓN -->
-      <section id="view-summary" class="hidden flex-1 p-4 space-y-4">
+      <!-- VISTA 2A: LISTA DE EXÁMENES (PANTALLA INDEPENDIENTE PARA MULTI-EXAMEN) -->
+      <section id="view-exams-list" class="hidden flex-1 p-4 space-y-4">
+        <!-- Datos del paciente -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
           <div class="flex items-start justify-between gap-2">
             <div>
               <span class="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800">
+                Múltiples Atenciones Ambulatorias
+              </span>
+              <h2 id="list-patient-name" class="text-lg font-extrabold text-slate-900 mt-1.5">Nombre Paciente</h2>
+              <p id="list-patient-meta" class="text-xs text-slate-500 font-medium">RUT • Edad</p>
+            </div>
+            <div class="text-right shrink-0 bg-gradient-to-br from-sky-600 to-teal-600 text-white px-3 py-2 rounded-xl shadow-sm border border-sky-200">
+              <p id="list-date" class="text-[11px] font-bold text-sky-100">Fecha</p>
+              <p id="list-time-summary" class="text-sm font-black text-white">3 horas</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Lista de exámenes del día -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div class="flex items-center justify-between gap-2">
+            <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide">
+              📋 Exámenes y Atenciones del Día
+            </h3>
+            <span id="multi-exams-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
+              2 pisos
+            </span>
+          </div>
+
+          <!-- Leyenda de estados -->
+          <div class="flex flex-wrap items-center gap-4 text-[10px] font-semibold text-slate-600 bg-slate-50 px-3 py-1.5 rounded-xl border border-slate-200/80">
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 inline-block"></span>
+              Realizada
+            </span>
+            <span class="flex items-center gap-1.5">
+              <span class="w-2.5 h-2.5 rounded-full bg-amber-400 inline-block"></span>
+              Pendiente
+            </span>
+          </div>
+
+          <div id="multi-exams-list" class="space-y-2.5"></div>
+        </div>
+      </section>
+
+      <!-- VISTA 2B: DETALLE DE CITACIÓN, INDICACIONES Y DOCUMENTACIÓN -->
+      <section id="view-summary" class="hidden flex-1 p-4 space-y-4">
+        <!-- Botón para volver a la lista cuando el paciente tiene múltiples exámenes -->
+        <button
+          id="btn-back-to-exams"
+          type="button"
+          onclick="goToView('exams-list')"
+          class="hidden w-full py-2.5 px-4 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-[0.99] border-2 border-sky-500 text-sky-900 font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 whitespace-nowrap"
+        >
+          <span>←</span>
+          <span>Volver a lista de exámenes</span>
+        </button>
+
+        <!-- Datos del paciente -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
+          <div class="flex items-start justify-between gap-2">
+            <div>
+              <span id="sum-header-tag" class="inline-block text-[10px] font-extrabold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-sky-100 text-sky-800">
                 Atención Ambulatoria Confirmada
               </span>
               <h2 id="sum-patient-name" class="text-lg font-extrabold text-slate-900 mt-1.5">Nombre Paciente</h2>
               <p id="sum-patient-meta" class="text-xs text-slate-500 font-medium">RUT • Edad</p>
             </div>
-            <div class="text-right shrink-0 bg-gradient-to-br from-sky-600 to-teal-600 text-white px-3 py-2 rounded-xl shadow-sm border border-sky-200">
+            <div id="sum-datetime-box" class="text-right shrink-0 bg-gradient-to-br from-sky-600 to-teal-600 text-white px-3 py-2 rounded-xl shadow-sm border border-sky-200">
               <p id="sum-date" class="text-[11px] font-bold text-sky-100">Fecha</p>
               <p id="sum-time" class="text-sm font-black text-white">09:30 hrs</p>
             </div>
           </div>
+        </div>
 
-          <div class="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
-            <div>
-              <p class="text-[11px] font-semibold text-slate-400 uppercase">Especialidad y Sector</p>
-              <p id="sum-specialty" class="text-sm font-bold text-slate-800">Especialidad</p>
-              <p id="sum-location" class="text-xs font-semibold text-sky-700">Piso • Sector</p>
+        <!-- Detalle del examen seleccionado -->
+        <div id="exam-detail-container" class="space-y-4">
+          <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-2.5">
+            <!-- Fila superior independiente para el estado de la atención -->
+            <div id="sum-status-row" class="hidden pb-2.5 border-b border-slate-100">
+              <span id="sum-detail-status" class="inline-flex items-center gap-1.5 text-[11px] font-extrabold px-2.5 py-1 rounded-full"></span>
             </div>
-            <span id="sum-floor-badge" class="px-3 py-1.5 rounded-xl text-xs font-black text-white bg-slate-800 shrink-0">
-              PISO
-            </span>
-          </div>
-        </div>
 
-        <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 shadow-sm">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-black flex items-center justify-center">!</span>
-            <h3 class="text-sm font-extrabold text-rose-950 uppercase tracking-wide">
-              Indicaciones Previas Obligatorias
+            <!-- Bloque vertical inferior: Especialidad y Sector -->
+            <div class="flex items-start justify-between gap-3">
+              <div class="space-y-0.5">
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Especialidad y Sector</p>
+                <p id="sum-specialty" class="text-sm font-extrabold text-slate-900 leading-snug">Especialidad</p>
+                <p id="sum-location" class="text-xs font-semibold text-sky-700">Piso • Sector</p>
+              </div>
+              <span id="sum-floor-badge" class="px-3 py-1.5 rounded-xl text-xs font-black text-white bg-slate-800 shrink-0">
+                PISO
+              </span>
+            </div>
+          </div>
+
+          <div class="bg-rose-50 border-2 border-rose-300 rounded-2xl p-4 shadow-sm">
+            <div class="flex items-center gap-2 mb-2">
+              <span class="w-6 h-6 rounded-full bg-rose-600 text-white text-xs font-black flex items-center justify-center">!</span>
+              <h3 class="text-sm font-extrabold text-rose-950 uppercase tracking-wide">
+                Indicaciones Previas Obligatorias
+              </h3>
+            </div>
+            <ul id="sum-indications" class="space-y-2 text-xs text-rose-950 font-medium"></ul>
+          </div>
+
+          <div class="bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm">
+            <h3 class="text-sm font-extrabold text-amber-950 mb-2 flex items-center gap-1.5">
+              <span>📄</span> Documentación que debes llevar
             </h3>
+            <ul id="sum-documents" class="space-y-1.5 text-xs text-amber-950 font-medium"></ul>
           </div>
-          <ul id="sum-indications" class="space-y-2 text-xs text-rose-950 font-medium"></ul>
-        </div>
 
-        <div class="bg-amber-50 border border-amber-300 rounded-2xl p-4 shadow-sm">
-          <h3 class="text-sm font-extrabold text-amber-950 mb-2 flex items-center gap-1.5">
-            <span>📄</span> Documentación que debes llevar
-          </h3>
-          <ul id="sum-documents" class="space-y-1.5 text-xs text-amber-950 font-medium"></ul>
+          <button
+            onclick="goToView('map')"
+            class="w-full bg-sky-700 hover:bg-sky-800 active:scale-[0.99] text-white font-extrabold text-sm py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2"
+          >
+            <span>🗺️</span>
+            <span>Ver cómo llegar en el mapa del piso</span>
+            <span>→</span>
+          </button>
         </div>
-
-        <button
-          onclick="goToView('map')"
-          class="w-full bg-sky-700 hover:bg-sky-800 active:scale-[0.99] text-white font-extrabold text-sm py-3.5 rounded-2xl shadow-lg transition flex items-center justify-center gap-2"
-        >
-          <span>🗺️</span>
-          <span>Ver cómo llegar en el mapa del piso</span>
-          <span>→</span>
-        </button>
       </section>
 
-      <!-- VISTA 3: PLANO INTERACTIVO 1:1 DEL PISO Y RUTA PASO A PASO -->
+      <!-- VISTA 3: MAPA DEL PISO Y GUÍA PASO A PASO -->
       <section id="view-map" class="hidden flex-1 p-4 space-y-4">
-        <div class="bg-white rounded-2xl p-3 shadow-sm border border-slate-200">
-          <div class="mb-2.5 px-1 space-y-2">
-            <div class="flex items-center gap-1.5">
-              <span id="map-floor-pill" class="text-[10px] font-black uppercase px-2 py-0.5 rounded bg-slate-900 text-white shrink-0">PISO</span>
-              <span id="map-sector-label" class="text-xs font-bold text-slate-700">Sector Destino</span>
-            </div>
-            <button
-              type="button"
-              onclick="goToView('summary')"
-              class="w-full py-2 px-3.5 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-[0.99] text-sky-800 border border-sky-300 text-xs font-extrabold whitespace-nowrap transition flex items-center justify-center gap-1.5 shadow-xs"
-            >
-              <span>←</span>
-              <span>Volver a indicaciones</span>
-            </button>
+        <!-- Encabezado de ubicación + Botón horizontal destacado Volver a indicaciones -->
+        <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200 space-y-3">
+          <div class="flex items-center gap-2.5">
+            <span id="map-floor-pill" class="px-2.5 py-1 rounded-lg text-[11px] font-black text-white bg-sky-700 shrink-0">
+              PISO 1
+            </span>
+            <p id="map-sector-label" class="text-xs font-extrabold text-slate-800 leading-snug">
+              Sector Foca • Imagenología
+            </p>
           </div>
 
-          <div id="map-svg-wrapper" class="w-full rounded-xl overflow-hidden bg-slate-900 shadow-inner"></div>
-
-          <div class="mt-2.5 px-1 flex flex-wrap items-center justify-between gap-2 text-[11px] font-semibold text-slate-600">
-            <span class="flex items-center gap-1.5">
-              <span class="w-3 h-3 rounded-sm bg-sky-700 border border-amber-400 inline-block"></span>
-              Inicio: Asc. Principales
-            </span>
-            <span class="flex items-center gap-1.5">
-              <span class="w-3 h-3 rounded-sm bg-amber-400 border border-amber-700 inline-block"></span>
-              Destino resaltado
-            </span>
-          </div>
+          <button
+            type="button"
+            onclick="goToView('summary')"
+            class="w-full py-2.5 px-4 rounded-xl bg-sky-50 hover:bg-sky-100 active:scale-[0.99] border-2 border-sky-500 text-sky-900 font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 whitespace-nowrap"
+          >
+            <span>←</span>
+            <span>Volver a indicaciones</span>
+          </button>
         </div>
 
+        <!-- Plano arquitectónico SVG del piso -->
+        <div class="bg-white rounded-2xl p-2.5 shadow-md border border-slate-200">
+          <div id="map-svg-wrapper" class="w-full rounded-xl overflow-hidden bg-slate-900"></div>
+        </div>
+
+        <!-- Guía paso a paso desde Ascensores Principales -->
         <div class="bg-white rounded-2xl p-4 shadow-sm border border-slate-200">
-          <h3 class="text-sm font-extrabold text-slate-900 mb-3 flex items-center gap-1.5">
+          <h3 class="text-xs font-extrabold text-slate-900 uppercase tracking-wide mb-3 flex items-center gap-1.5">
             <span>🧭</span> Ruta paso a paso desde Ascensores Principales
           </h3>
           <ol id="map-steps" class="space-y-2.5 text-xs text-slate-700 font-medium"></ol>
         </div>
 
-        <div class="bg-gradient-to-br from-sky-700 to-teal-700 text-white rounded-2xl p-4 shadow-md border border-sky-500/40">
-          <div class="flex items-center justify-between gap-2 mb-1">
-            <span class="text-[10px] font-extrabold uppercase tracking-wider text-white">
-              Señalética en el hospital
+        <!-- Tarjeta de Señalética en el Hospital -->
+        <div class="bg-gradient-to-r from-sky-700 to-teal-700 text-white rounded-2xl p-4 shadow-md border border-sky-500/40 space-y-2">
+          <div class="flex flex-wrap items-center justify-between gap-2">
+            <span class="text-[11px] font-extrabold uppercase tracking-wider text-white">
+              SEÑALÉTICA EN EL HOSPITAL
             </span>
-            <span id="map-motif-badge" class="text-xs font-bold bg-white/15 text-white px-2.5 py-0.5 rounded-full">
-              Motivo
+            <span id="map-motif-badge" class="text-[11px] font-bold bg-white/15 px-2.5 py-1 rounded-full text-white border border-white/20">
+              🦭 Foca (Morado — Piso 1)
             </span>
           </div>
-          <p id="map-tip" class="text-xs text-white/95 leading-relaxed"></p>
+          <p id="map-tip" class="text-xs text-sky-50 leading-relaxed font-medium"></p>
         </div>
       </section>
 
@@ -1014,43 +1085,160 @@
           'Sigue la numeración de habitación indicada en enfermería (ícono de <strong>Alpaca</strong>).'
         ],
         tip: 'El Piso 5 está dedicado a hospitalización con motivos del altiplano (Alpaca, Flamenco y Desierto Florido).'
+      },
+      {
+        rut: '20.999.333-7',
+        dob: '2016-04-18',
+        name: 'Benjamín Andrés Valdés Muñoz',
+        age: '10 años',
+        date: 'Jueves 26 Nov',
+        time: '2 citaciones',
+        exams: [
+          {
+            id: 'exam-p2',
+            status: 'realizada',
+            date: 'Jueves 26 Nov',
+            time: '08:30 hrs',
+            specialty: 'Toma de Muestras — Hemograma y Perfil',
+            floor: 2,
+            sectorName: 'Sector Picaflor • Toma de Muestras',
+            motif: '🐦 Picaflor (Naranjo — Piso 2)',
+            blockId: 'p2-muestras',
+            badgeColor: PALETTE.orange,
+            indications: [
+              'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
+              'Atención ya realizada hoy a las 08:30 hrs. Resultados disponibles en ficha clínica electrónica.'
+            ],
+            documents: [
+              'Orden médica física impresa y firmada por el médico tratante.',
+              'Comprobante de toma de muestras entregado en recepción.'
+            ],
+            steps: [
+              'Desde los <strong>Ascensores Principales</strong> en el Piso 2, avanza hacia el sur por el <strong>Pasillo Principal</strong>.',
+              'Pasa frente a <strong>Admisión</strong> y continúa hasta el extremo inferior del pasillo.',
+              'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Picaflor</strong>).'
+            ],
+            tip: 'Esta atención ambulatoria ya fue realizada en el Piso 2 (Sector Picaflor).'
+          },
+          {
+            id: 'exam-p1',
+            status: 'pendiente',
+            date: 'Jueves 26 Nov',
+            time: '10:15 hrs',
+            specialty: 'Imagenología — Radiografía de Tórax',
+            floor: 1,
+            sectorName: 'Sector Foca • Imagenología',
+            motif: '🦭 Foca (Morado — Piso 1)',
+            blockId: 'p1-imagen',
+            badgeColor: PALETTE.purple,
+            indications: [
+              'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
+              'Vestir ropa cómoda sin broches metálicos, cierres ni cadenas en la zona del pecho.'
+            ],
+            documents: [
+              'Orden médica física impresa y firmada por el médico tratante.',
+              'Cédula de identidad del paciente y del adulto responsable acompañante.'
+            ],
+            steps: [
+              'Baja al <strong>Piso 1</strong> utilizando los <strong>Ascensores Principales</strong>.',
+              'Al salir al <strong>Pasillo Principal</strong>, avanza hacia el sur bordeando los patios de luz.',
+              'Ingresa al bloque morado de <strong>Imagenología</strong> (ícono de <strong>Foca</strong>), ubicado justo sobre Emergencia.'
+            ],
+            tip: 'En el Piso 1 sigue la señalética morada con el ícono de Foca para llegar a Imagenología.'
+          }
+        ]
       }
     ];
 
     let activePatient = DEMO_PATIENTS[0];
+    let selectedExamIndex = null;
+
+    const EXAM_STATUS_META = {
+      realizada: {
+        label: 'Atención ambulatoria realizada',
+        dotClass: 'bg-emerald-500',
+        badgeClass: 'bg-emerald-100 text-emerald-900 border border-emerald-300',
+        cardClass: 'bg-slate-200/65 opacity-80 border-slate-300'
+      },
+      pendiente: {
+        label: 'Atención ambulatoria pendiente',
+        dotClass: 'bg-amber-400',
+        badgeClass: 'bg-amber-100 text-amber-950 border border-amber-300',
+        cardClass: 'bg-white border-amber-300 shadow-xs'
+      }
+    };
+
+    function escapeXML(str) {
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    function wrapText(text, maxChars) {
+      if (text.length <= maxChars) return [text];
+      const words = text.split(' ');
+      const lines = [];
+      let current = '';
+      for (const w of words) {
+        if ((current + ' ' + w).trim().length <= maxChars) {
+          current = (current + ' ' + w).trim();
+        } else {
+          if (current) lines.push(current);
+          current = w;
+        }
+      }
+      if (current) lines.push(current);
+      return lines.slice(0, 3);
+    }
 
     function normalizeRut(rut) {
-      return (rut || '').replace(/[^0-9kK]/g, '').toUpperCase();
+      return String(rut || '').replace(/\./g, '').replace(/\s+/g, '').toUpperCase();
     }
 
     function formatRutInput(input) {
-      const clean = normalizeRut(input.value);
-      if (clean.length <= 1) {
-        input.value = clean;
-        return;
+      let clean = input.value.replace(/[^0-9kK]/g, '').toUpperCase();
+      if (clean.length > 9) {
+        clean = clean.slice(0, 9);
       }
-      const body = clean.slice(0, -1);
-      const dv = clean.slice(-1);
-      const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
-      input.value = `${formattedBody}-${dv}`;
+      if (clean.length > 1) {
+        const body = clean.slice(0, -1);
+        const dv = clean.slice(-1);
+        const formattedBody = body.replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+        input.value = `${formattedBody}-${dv}`;
+      } else {
+        input.value = clean;
+      }
     }
 
     function toggleDemoDrawer() {
       const drawer = document.getElementById('demo-drawer');
       const chevron = document.getElementById('demo-chevron');
+      if (!drawer) return;
       const isHidden = drawer.classList.toggle('hidden');
-      chevron.textContent = isHidden ? '⌄' : '⌃';
+      if (chevron) {
+        chevron.textContent = isHidden ? '›' : '⌄';
+      }
     }
 
     function fillDemoPatient(index) {
       const p = DEMO_PATIENTS[index];
+      if (!p) return;
       document.getElementById('rut-input').value = p.rut;
       document.getElementById('dob-input').value = p.dob;
       document.getElementById('login-error').classList.add('hidden');
       activePatient = p;
-      renderSummary(p);
-      renderMap(p);
-      goToView('summary');
+
+      if (Array.isArray(p.exams) && p.exams.length > 1) {
+        selectedExamIndex = 0;
+        renderExamsList(p);
+        goToView('exams-list');
+      } else {
+        selectedExamIndex = null;
+        renderSummary(p);
+        goToView('summary');
+      }
     }
 
     function handleLoginSubmit(event) {
@@ -1085,24 +1273,49 @@
         };
       }
 
+      if (Array.isArray(activePatient.exams) && activePatient.exams.length > 1) {
+        selectedExamIndex = 0;
+        renderExamsList(activePatient);
+        goToView('exams-list');
+      } else {
+        selectedExamIndex = null;
+        renderSummary(activePatient);
+        goToView('summary');
+      }
+    }
+
+    function selectPatientExam(idx) {
+      selectedExamIndex = idx;
       renderSummary(activePatient);
-      renderMap(activePatient);
       goToView('summary');
+    }
+
+    function getActiveExamData(p) {
+      if (p.exams && p.exams.length > 0) {
+        const idx = selectedExamIndex !== null ? selectedExamIndex : 0;
+        return p.exams[idx];
+      }
+      return p;
     }
 
     function goToView(viewName) {
       const loginView = document.getElementById('view-login');
+      const examsListView = document.getElementById('view-exams-list');
       const summaryView = document.getElementById('view-summary');
       const mapView = document.getElementById('view-map');
       const innerHeader = document.getElementById('inner-header');
 
       loginView.classList.add('hidden');
+      examsListView.classList.add('hidden');
       summaryView.classList.add('hidden');
       mapView.classList.add('hidden');
 
       if (viewName === 'login') {
         loginView.classList.remove('hidden');
         innerHeader.classList.add('hidden');
+      } else if (viewName === 'exams-list') {
+        examsListView.classList.remove('hidden');
+        innerHeader.classList.remove('hidden');
       } else if (viewName === 'summary') {
         summaryView.classList.remove('hidden');
         innerHeader.classList.remove('hidden');
@@ -1115,64 +1328,109 @@
       document.querySelector('main').scrollTop = 0;
     }
 
+    function renderExamsList(p) {
+      document.getElementById('list-patient-name').textContent = p.name;
+      document.getElementById('list-patient-meta').textContent = `RUT: ${p.rut} • ${p.age}`;
+      document.getElementById('list-date').textContent = p.date;
+      document.getElementById('list-time-summary').textContent = `${p.exams.length} horas`;
+
+      const uniqueFloors = new Set(p.exams.map(e => e.floor)).size;
+      document.getElementById('multi-exams-count').textContent = `${p.exams.length} exámenes • ${uniqueFloors} pisos`;
+
+      document.getElementById('multi-exams-list').innerHTML = p.exams.map((exam, idx) => {
+        const meta = EXAM_STATUS_META[exam.status] || EXAM_STATUS_META.pendiente;
+        const btnStyle = exam.status === 'pendiente'
+          ? 'bg-sky-700 hover:bg-sky-800 text-white border border-sky-700'
+          : 'bg-white hover:bg-slate-50 text-slate-800 border border-slate-300';
+
+        return `
+          <div class="w-full text-left p-3 rounded-xl border transition ${meta.cardClass}">
+            <div class="flex items-center justify-between gap-2 mb-1">
+              <span class="inline-flex items-center gap-1.5 text-[10px] font-extrabold px-2 py-0.5 rounded-full ${meta.badgeClass}">
+                <span class="w-2.5 h-2.5 rounded-full ${meta.dotClass} shrink-0"></span>
+                <span>${meta.label}</span>
+              </span>
+              <span class="text-[10px] font-black text-white px-2 py-0.5 rounded-md shrink-0" style="background-color:${exam.badgeColor}">
+                PISO ${exam.floor}
+              </span>
+            </div>
+            <p class="text-xs font-extrabold text-slate-900 mt-1">${exam.specialty}</p>
+            <div class="flex items-center justify-between gap-2 mt-1 text-[11px] font-semibold text-slate-600">
+              <span>${exam.sectorName}</span>
+              <span class="font-bold text-slate-800 shrink-0">${exam.time}</span>
+            </div>
+            <button
+              type="button"
+              onclick="selectPatientExam(${idx})"
+              class="mt-2.5 w-full py-2 px-3 rounded-lg text-xs font-extrabold transition flex items-center justify-center gap-1.5 shadow-xs ${btnStyle}"
+            >
+              <span>Ver detalles</span>
+              <span>→</span>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
     function renderSummary(p) {
+      const hasMultiple = Array.isArray(p.exams) && p.exams.length > 1;
+      const backBtn = document.getElementById('btn-back-to-exams');
+      const statusRowEl = document.getElementById('sum-status-row');
+      const detailStatusEl = document.getElementById('sum-detail-status');
+
       document.getElementById('sum-patient-name').textContent = p.name;
       document.getElementById('sum-patient-meta').textContent = `RUT: ${p.rut} • ${p.age}`;
-      document.getElementById('sum-date').textContent = p.date;
-      document.getElementById('sum-time').textContent = p.time;
-      document.getElementById('sum-specialty').textContent = p.specialty;
-      document.getElementById('sum-location').textContent = `Piso ${p.floor} • ${p.sectorName}`;
+
+      if (hasMultiple) {
+        document.getElementById('sum-header-tag').textContent = 'Detalle de Atención Ambulatoria';
+        backBtn.classList.remove('hidden');
+      } else {
+        document.getElementById('sum-header-tag').textContent = 'Atención Ambulatoria Confirmada';
+        backBtn.classList.add('hidden');
+      }
+
+      const exam = getActiveExamData(p);
+      document.getElementById('sum-date').textContent = exam.date;
+      document.getElementById('sum-time').textContent = exam.time;
+      document.getElementById('sum-specialty').textContent = exam.specialty;
+      document.getElementById('sum-location').textContent = `Piso ${exam.floor} • ${exam.sectorName}`;
+
+      if (hasMultiple && exam.status && EXAM_STATUS_META[exam.status]) {
+        const meta = EXAM_STATUS_META[exam.status];
+        statusRowEl.classList.remove('hidden');
+        detailStatusEl.className = `inline-flex items-center gap-1.5 text-[11px] font-extrabold px-2.5 py-1 rounded-full ${meta.badgeClass}`;
+        detailStatusEl.innerHTML = `<span class="w-2.5 h-2.5 rounded-full ${meta.dotClass} shrink-0"></span><span>${meta.label}</span>`;
+      } else {
+        statusRowEl.classList.add('hidden');
+      }
 
       const badge = document.getElementById('sum-floor-badge');
-      badge.textContent = `PISO ${p.floor}`;
-      badge.style.backgroundColor = p.badgeColor;
+      badge.textContent = `PISO ${exam.floor}`;
+      badge.style.backgroundColor = exam.badgeColor;
 
-      document.getElementById('sum-indications').innerHTML = p.indications.map(item => `
-        <li class="flex items-start gap-2">
-          <span class="text-rose-600 font-black mt-0.5">•</span>
-          <span>${item}</span>
-        </li>
-      `).join('');
+      document.getElementById('sum-indications').innerHTML = exam.indications
+        .map(item => `
+          <li class="flex items-start gap-2">
+            <span class="text-rose-600 font-black mt-0.5">•</span>
+            <span>${item}</span>
+          </li>
+        `).join('');
 
-      document.getElementById('sum-documents').innerHTML = p.documents.map(doc => `
-        <li class="flex items-start gap-2">
-          <span class="text-amber-700 font-black mt-0.5">✓</span>
-          <span>${doc}</span>
-        </li>
-      `).join('');
+      document.getElementById('sum-documents').innerHTML = exam.documents
+        .map(doc => `
+          <li class="flex items-start gap-2">
+            <span class="text-amber-700 font-black mt-0.5">✓</span>
+            <span>${doc}</span>
+          </li>
+        `).join('');
     }
 
-    function wrapSvgText(text, maxChars) {
-      if (text.length <= maxChars) return [text];
-      const words = text.split(' ');
-      const lines = [];
-      let cur = '';
-      for (const w of words) {
-        if ((cur + ' ' + w).trim().length <= maxChars) {
-          cur = (cur + ' ' + w).trim();
-        } else {
-          if (cur) lines.push(cur);
-          cur = w;
-        }
-      }
-      if (cur) lines.push(cur);
-      return lines.slice(0, 3);
-    }
-
-    function escapeXML(str) {
-      return String(str)
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/"/g, '&quot;');
-    }
-
-    function buildFloorPlanSVG(floorData, targetBlockId) {
-      const patiosSVG = floorData.patios.map(p => `
-        <rect x="${p.x}" y="${p.y}" width="${p.w}" height="${p.h}" rx="3" fill="#FFFFFF" stroke="#1E293B" stroke-width="2" />
+    function buildFloorPlanSVG(floor, targetBlockId) {
+      const patiosSVG = floor.patios.map(pt => `
+        <rect x="${pt.x}" y="${pt.y}" width="${pt.w}" height="${pt.h}" rx="3" fill="#FFFFFF" stroke="#1E293B" stroke-width="2" />
       `).join('');
 
-      const extrasSVG = (floorData.extras || []).map(ex => {
+      const extrasSVG = (floor.extras || []).map(ex => {
         if (ex.type === 'badge') {
           return `
             <g transform="translate(${ex.x}, ${ex.y})">
@@ -1206,59 +1464,67 @@
         return '';
       }).join('');
 
-      let targetCenter = null;
+      let targetArrival = null;
 
-      const blocksSVG = floorData.blocks.map(b => {
+      const blocksSVG = floor.blocks.map(b => {
         const isTarget = b.id === targetBlockId;
-        const cx = b.iconPos ? b.iconPos.x : (b.x + b.w / 2);
-        const cy = b.iconPos ? b.iconPos.y : (b.y + b.h / 2 - (b.h > 55 ? 10 : 6));
-        if (isTarget) {
-          targetCenter = { x: cx, y: cy, boxX: b.x, boxY: b.y, boxW: b.w, boxH: b.h };
-        }
+        const opacity = isTarget ? '1' : '0.9';
+        const stroke = isTarget ? '#FACC15' : 'none';
+        const strokeW = isTarget ? '3.5' : '0';
+        const animClass = isTarget ? 'class="pulse-dest"' : '';
 
         const shapeSVG = b.customPath
-          ? `<path d="${b.customPath}" fill="${b.color}" fill-opacity="${isTarget ? '1' : '0.86'}" stroke="${isTarget ? '#FACC15' : 'none'}" stroke-width="${isTarget ? '3.5' : '0'}" />`
-          : `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5" fill="${b.color}" fill-opacity="${isTarget ? '1' : '0.86'}" stroke="${isTarget ? '#FACC15' : 'none'}" stroke-width="${isTarget ? '3.5' : '0'}" />`;
+          ? `<path d="${b.customPath}" fill="${b.color}" fill-opacity="${opacity}" stroke="${stroke}" stroke-width="${strokeW}" ${animClass} />`
+          : `<rect x="${b.x}" y="${b.y}" width="${b.w}" height="${b.h}" rx="5" fill="${b.color}" fill-opacity="${opacity}" stroke="${stroke}" stroke-width="${strokeW}" ${animClass} />`;
 
-        let innerSVG = '';
+        let innerContentSVG = '';
         if (b.multiIcons) {
-          innerSVG = b.multiIcons.map(mi => `
-            <g transform="translate(${mi.x}, ${mi.y}) scale(0.72)">${ICONS[mi.icon] || ''}</g>
-            <text x="${mi.x}" y="${mi.y + 16}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="5.4px">${escapeXML(mi.label)}</text>
-          `).join('');
+          innerContentSVG = b.multiIcons.map(mi => {
+            const subLines = wrapText(mi.label, 14);
+            return `
+              <g transform="translate(${mi.x}, ${mi.y}) scale(0.72)">
+                ${ICONS[mi.icon] || ''}
+              </g>
+              ${subLines.map((l, i) => `
+                <text x="${mi.x}" y="${mi.y + 16 + i * 7}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="5.4px">${escapeXML(l)}</text>
+              `).join('')}
+            `;
+          }).join('');
         } else {
+          const cx = b.iconPos ? b.iconPos.x : (b.x + b.w / 2);
+          const cy = b.iconPos ? b.iconPos.y : (b.y + b.h / 2 - (b.h > 55 ? 10 : 6));
           const tx = b.textPos ? b.textPos.x : (b.x + b.w / 2);
           const ty = b.textPos ? b.textPos.y : (cy + 18);
-          const lines = wrapSvgText(b.name, Math.max(9, Math.floor(b.w / 5.2)));
+
+          if (isTarget) {
+            targetArrival = { x: cx, y: Math.max(cy, 76) };
+          }
+
+          const maxChars = Math.max(9, Math.floor(b.w / 5.2));
+          const lines = wrapText(b.name, maxChars);
           const fontSize = b.w < 75 ? 6.0 : 7.2;
 
-          innerSVG = `
-            <g transform="translate(${cx}, ${cy}) scale(${b.h < 45 ? 0.72 : 0.85})">${ICONS[b.icon] || ''}</g>
-            ${lines.map((l, idx) => `
-              <text x="${tx}" y="${ty + idx * (fontSize + 1.8)}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="${fontSize}px">${escapeXML(l)}</text>
-            `).join('')}
+          const textLinesSVG = lines.map((line, idx) => `
+            <text x="${tx}" y="${ty + idx * (fontSize + 1.8)}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="700" font-size="${fontSize}px" letter-spacing="0.2">${escapeXML(line)}</text>
+          `).join('');
+
+          innerContentSVG = `
+            <g transform="translate(${cx}, ${cy}) scale(${b.h < 45 ? 0.72 : 0.85})">
+              ${ICONS[b.icon] || ''}
+            </g>
+            ${textLinesSVG}
           `;
         }
 
-        const destTag = isTarget ? `
-          <g class="pulse-dest">
-            <rect x="${cx - 24.5}" y="${cy - 34.5}" width="49" height="12.5" rx="4" fill="#0F172A" stroke="#090D16" stroke-width="1.2"/>
-            <text x="${cx}" y="${cy - 25.8}" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="7.6px">tu destino</text>
-            <path d="M ${cx} ${cy} C ${cx - 5} ${cy - 7} ${cx - 7} ${cy - 10} ${cx - 7} ${cy - 12} A 7 7 0 1 1 ${cx + 7} ${cy - 12} C ${cx + 7} ${cy - 10} ${cx + 5} ${cy - 7} ${cx} ${cy} Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="1.3"/>
-            <circle cx="${cx}" cy="${cy - 12}" r="2.4" fill="#FFFFFF"/>
+        return `
+          <g>
+            ${shapeSVG}
+            ${innerContentSVG}
           </g>
-        ` : '';
-
-        return `<g>${shapeSVG}${innerSVG}${destTag}</g>`;
+        `;
       }).join('');
 
-      const elev = floorData.mainElevator;
-      const routeLineSVG = targetCenter ? `
-        <path d="M ${elev.x - 10} ${elev.y} L 302 ${elev.y} L 302 ${targetCenter.y} L ${targetCenter.x} ${targetCenter.y}"
-          fill="none" stroke="#FACC15" stroke-width="3.2" stroke-dasharray="6 4" stroke-linecap="round" stroke-linejoin="round" />
-      ` : '';
-
-      const secElevSVG = (floorData.secondaryElevators || []).map(ev => `
+      const secElevSVG = (floor.secondaryElevators || []).map(ev => `
         <g transform="translate(${ev.x}, ${ev.y})">
           <circle cx="0" cy="0" r="9.5" fill="#FFFFFF" stroke="#1E293B" stroke-width="1.4"/>
           <rect x="-3.8" y="-4.8" width="7.6" height="9.6" rx="1" fill="none" stroke="#1E293B" stroke-width="1.2"/>
@@ -1266,24 +1532,69 @@
         </g>
       `).join('');
 
+      const elev = floor.mainElevator;
+      const corridorCenterX = 302;
+
+      const routeOverlaySVG = targetArrival ? `
+        <!-- Línea punteada amarilla desde Ascensores Principales hasta el destino -->
+        <polyline
+          points="${elev.x},${elev.y} ${corridorCenterX},${elev.y} ${corridorCenterX},${targetArrival.y} ${targetArrival.x},${targetArrival.y}"
+          fill="none"
+          stroke="#FACC15"
+          stroke-width="3.6"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-dasharray="7 5"
+        />
+
+        <!-- Marcador de ubicación y etiqueta elevada "tu destino" al final de la ruta -->
+        <g transform="translate(${targetArrival.x}, ${targetArrival.y})">
+          <ellipse cx="0" cy="1.5" rx="6.5" ry="2.5" fill="rgba(0,0,0,0.38)"/>
+          <path d="M 0 0 C -7.5 -10 -14 -16.5 -14 -24 A 14 14 0 1 1 14 -24 C 14 -16.5 7.5 -10 0 0 Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="2.1"/>
+          <circle cx="0" cy="-24" r="5.2" fill="#FFFFFF"/>
+
+          <!-- Cápsula elevada con borde negro y texto blanco más grande -->
+          <g transform="translate(0, -45)">
+            <rect x="-43" y="-19" width="86" height="22" rx="7" fill="#0F172A" stroke="#000000" stroke-width="2"/>
+            <text x="0" y="-4" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="12px" letter-spacing="0.2">tu destino</text>
+          </g>
+        </g>
+      ` : '';
+
       return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 660" class="w-full h-auto block select-none">
-        <rect x="0" y="0" width="390" height="660" rx="14" fill="${PALETTE.board}" />
-        <text x="24" y="21" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11px" letter-spacing="0.4">${escapeXML(floorData.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
+        <!-- Tablero exterior azul pizarra oscuro -->
+        <rect x="0" y="0" width="390" height="660" rx="16" fill="${PALETTE.board}" />
 
-        <path d="${floorData.perimeterOuter}" fill="#F8FAFC" stroke="#0F172A" stroke-width="2" />
-        <path d="${floorData.perimeterInner}" fill="none" stroke="#1E293B" stroke-width="1.5" />
+        <!-- Encabezado superior del tablero -->
+        <text x="24" y="21" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11.5px" letter-spacing="0.4">${escapeXML(floor.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
 
+        <!-- Marco arquitectónico blanco interior -->
+        <path d="${floor.perimeterOuter}" fill="#F8FAFC" stroke="#0F172A" stroke-width="2" />
+        <path d="${floor.perimeterInner}" fill="none" stroke="#1E293B" stroke-width="1.5" />
+
+        <!-- Franja vertical izquierda: ÁREA FUNCIONARIOS -->
         <text x="58" y="325" transform="rotate(-90 58 325)" text-anchor="middle" fill="#475569" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.5">ÁREA FUNCIONARIOS</text>
 
-        <path d="${floorData.corridorPath}" fill="${PALETTE.corridor}" />
-        <text x="302" y="${floorData.corridorTextY}" transform="rotate(-90 302 ${floorData.corridorTextY})" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.4">PASILLO PRINCIPAL</text>
+        <!-- Pasillo Principal vertical -->
+        <path d="${floor.corridorPath}" fill="${PALETTE.corridor}" />
+        <text x="302" y="${floor.corridorTextY}" transform="rotate(-90 302 ${floor.corridorTextY})" text-anchor="middle" fill="#E2E8F0" font-family="Inter, sans-serif" font-weight="700" font-size="7.2px" letter-spacing="1.4">PASILLO PRINCIPAL</text>
 
+        <!-- Patios de luz interiores -->
         ${patiosSVG}
-        ${blocksSVG}
-        ${extrasSVG}
-        ${secElevSVG}
-        ${routeLineSVG}
 
+        <!-- Bloques de servicios y unidades -->
+        ${blocksSVG}
+
+        <!-- Elementos complementarios -->
+        ${extrasSVG}
+
+        <!-- Ascensores secundarios -->
+        ${secElevSVG}
+
+        <!-- Ruta punteada amarilla + pin de ubicación + "tu destino" -->
+        ${routeOverlaySVG}
+
+        <!-- Marcador destacado de ASCENSORES PRINCIPALES -->
         <g transform="translate(${elev.x - 18}, ${elev.y - 16})">
           <rect x="0" y="0" width="56" height="32" rx="6" fill="#0369A1" stroke="#FACC15" stroke-width="2"/>
           <text x="28" y="13" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="7.2px">🛗 ASC.</text>
@@ -1293,27 +1604,29 @@
     }
 
     function renderMap(p) {
-      const floorData = FLOOR_MAPS[p.floor] || FLOOR_MAPS[1];
-      document.getElementById('map-floor-pill').textContent = `PISO ${p.floor}`;
-      document.getElementById('map-floor-pill').style.backgroundColor = p.badgeColor;
-      document.getElementById('map-sector-label').textContent = p.sectorName;
-      document.getElementById('map-svg-wrapper').innerHTML = buildFloorPlanSVG(floorData, p.blockId);
+      const exam = getActiveExamData(p);
+      const floorData = FLOOR_MAPS[exam.floor] || FLOOR_MAPS[1];
 
-      document.getElementById('map-steps').innerHTML = p.steps.map((step, idx) => `
-        <li class="flex items-start gap-2.5">
-          <span class="w-5 h-5 rounded-full bg-sky-700 text-white text-[11px] font-extrabold flex items-center justify-center shrink-0 mt-0.5">${idx + 1}</span>
-          <span class="leading-relaxed">${step}</span>
-        </li>
-      `).join('');
+      const pill = document.getElementById('map-floor-pill');
+      pill.textContent = `PISO ${exam.floor}`;
+      pill.style.backgroundColor = exam.badgeColor;
 
-      document.getElementById('map-motif-badge').textContent = p.motif;
-      document.getElementById('map-tip').textContent = p.tip;
+      document.getElementById('map-sector-label').textContent = exam.sectorName;
+      document.getElementById('map-motif-badge').textContent = exam.motif;
+      document.getElementById('map-tip').textContent = exam.tip;
+
+      document.getElementById('map-svg-wrapper').innerHTML = buildFloorPlanSVG(floorData, exam.blockId);
+
+      document.getElementById('map-steps').innerHTML = exam.steps
+        .map((step, index) => `
+          <li class="flex items-start gap-2.5">
+            <span class="w-5 h-5 rounded-full bg-sky-700 text-white text-[11px] font-black flex items-center justify-center shrink-0 mt-0.5">
+              ${index + 1}
+            </span>
+            <span class="leading-relaxed">${step}</span>
+          </li>
+        `).join('');
     }
-
-    window.onload = function () {
-      renderSummary(activePatient);
-      renderMap(activePatient);
-    };
   </script>
 </body>
 </html>
