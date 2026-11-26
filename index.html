@@ -97,34 +97,119 @@
         class="hegc-photo-layer opacity-90"
       />
       <div class="absolute inset-0 bg-gradient-to-r from-slate-950/75 via-slate-900/45 to-slate-950/75 z-0 pointer-events-none"></div>
-      <div class="relative z-10 flex items-center justify-between">
-        <button onclick="goToView('login')" class="flex items-center gap-2.5 text-left group" title="Volver al inicio">
-          <!-- Logotipo Circular Celeste y Verde Menta (versión compacta) -->
-          <span class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center shrink-0 overflow-hidden ring-2 ring-sky-300/80">
-            <svg viewBox="0 0 120 120" class="w-9 h-9" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="60" cy="60" r="56" fill="none" stroke="#38BDF8" stroke-width="5" stroke-dasharray="230 35" transform="rotate(-120 60 60)"/>
-              <circle cx="60" cy="60" r="52" fill="none" stroke="#34D399" stroke-width="4" stroke-dasharray="190 50" transform="rotate(40 60 60)"/>
-              <rect x="26" y="47" width="13" height="24" rx="3" fill="#38BDF8"/>
-              <rect x="41" y="38" width="18" height="33" rx="4" fill="#34D399"/>
-              <rect x="61" y="49" width="12" height="22" rx="3" fill="#38BDF8"/>
-              <rect x="48" y="44" width="4" height="10" rx="1" fill="#FFFFFF"/>
-              <rect x="45" y="47" width="10" height="4" rx="1" fill="#FFFFFF"/>
-              <path d="M25 71 Q45 64 68 70 T96 76" fill="none" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
-              <path d="M78 24 C66 24 58 33 58 44 C58 58 78 74 78 74 C78 74 98 58 98 44 C98 33 90 24 78 24 Z" fill="#0284C7"/>
-              <circle cx="78" cy="43" r="11" fill="#FFFFFF"/>
-              <rect x="76" y="37" width="4" height="12" rx="1" fill="#0284C7"/>
-              <rect x="72" y="41" width="12" height="4" rx="1" fill="#0284C7"/>
-            </svg>
-          </span>
-          <div>
-            <p class="text-[11px] font-extrabold tracking-wide text-white leading-tight drop-shadow">MI RUTA HOSPITALARIA</p>
-            <p class="text-[10px] text-sky-200 font-medium leading-tight drop-shadow">Hospital Dr. Exequiel González Cortés</p>
-          </div>
-        </button>
+      <div class="relative z-10 flex items-center justify-between gap-3">
+        <div class="flex flex-col items-start gap-2.5 min-w-0">
+          <button onclick="goToView('login')" class="flex items-center gap-2.5 text-left group" title="Volver al inicio">
+            <!-- Logotipo Circular Celeste y Verde Menta (versión compacta) -->
+            <span class="w-10 h-10 rounded-full bg-white shadow-md flex items-center justify-center shrink-0 overflow-hidden ring-2 ring-sky-300/80">
+              <svg viewBox="0 0 120 120" class="w-9 h-9" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="60" cy="60" r="56" fill="none" stroke="#38BDF8" stroke-width="5" stroke-dasharray="230 35" transform="rotate(-120 60 60)"/>
+                <circle cx="60" cy="60" r="52" fill="none" stroke="#34D399" stroke-width="4" stroke-dasharray="190 50" transform="rotate(40 60 60)"/>
+                <rect x="26" y="47" width="13" height="24" rx="3" fill="#38BDF8"/>
+                <rect x="41" y="38" width="18" height="33" rx="4" fill="#34D399"/>
+                <rect x="61" y="49" width="12" height="22" rx="3" fill="#38BDF8"/>
+                <rect x="48" y="44" width="4" height="10" rx="1" fill="#FFFFFF"/>
+                <rect x="45" y="47" width="10" height="4" rx="1" fill="#FFFFFF"/>
+                <path d="M25 71 Q45 64 68 70 T96 76" fill="none" stroke="#0284C7" stroke-width="5" stroke-linecap="round"/>
+                <path d="M78 24 C66 24 58 33 58 44 C58 58 78 74 78 74 C78 74 98 58 98 44 C98 33 90 24 78 24 Z" fill="#0284C7"/>
+                <circle cx="78" cy="43" r="11" fill="#FFFFFF"/>
+                <rect x="76" y="37" width="4" height="12" rx="1" fill="#0284C7"/>
+                <rect x="72" y="41" width="12" height="4" rx="1" fill="#0284C7"/>
+              </svg>
+            </span>
+            <div>
+              <p class="text-[11px] font-extrabold tracking-wide text-white leading-tight drop-shadow">MI RUTA HOSPITALARIA</p>
+              <p class="text-[10px] text-sky-200 font-medium leading-tight drop-shadow">Hospital Dr. Exequiel González Cortés</p>
+            </div>
+          </button>
 
-        <button onclick="goToView('login')" class="text-xs font-semibold bg-white/95 hover:bg-white text-slate-800 px-3 py-1.5 rounded-full transition shadow">
-          Nueva consulta
-        </button>
+          <button onclick="goToView('login')" class="text-xs font-bold bg-white/95 hover:bg-white active:scale-[0.99] text-slate-800 px-3.5 py-1.5 rounded-full transition shadow">
+            Nueva consulta
+          </button>
+        </div>
+
+        <!-- Logo oficial Hospital de Niños Dr. Exequiel González Cortés -->
+        <div class="w-[70px] h-[70px] rounded-full bg-white shadow-lg ring-2 ring-white/90 flex items-center justify-center shrink-0 overflow-hidden p-0.5">
+          <img
+            src="53dc48_34195b3c3cb84349a7c8943015ce85f5~mv2.avif"
+            onerror="this.style.display='none'; document.getElementById('hegc-hospital-emblem-svg').classList.remove('hidden');"
+            alt="Hospital de Niños Dr. Exequiel González Cortés"
+            class="w-full h-full object-contain rounded-full"
+          />
+          <svg id="hegc-hospital-emblem-svg" viewBox="0 0 200 200" class="hidden w-full h-full" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Hospital de Niños Dr. Exequiel González Cortés">
+            <defs>
+              <path id="hegcTopTextArc" d="M 25,100 A 75,75 0 1,1 175,100" />
+              <path id="hegcBottomTextArc" d="M 20,100 A 80,80 0 0,0 180,100" />
+              <path id="hegcMottoArc" d="M 41,106 A 59,59 0 0,0 159,106" />
+            </defs>
+
+            <!-- Fondo blanco y doble aro azul institucional -->
+            <circle cx="100" cy="100" r="97" fill="#FFFFFF" />
+            <circle cx="100" cy="100" r="93" fill="none" stroke="#1E3A8A" stroke-width="5" />
+            <path d="M 38 78 A 66 66 0 0 1 82 37" fill="none" stroke="#1E3A8A" stroke-width="3.2" stroke-linecap="round" />
+            <path d="M 118 37 A 66 66 0 0 1 162 78" fill="none" stroke="#1E3A8A" stroke-width="3.2" stroke-linecap="round" />
+            <path d="M 34 103 A 66 66 0 0 0 166 103" fill="none" stroke="#1E3A8A" stroke-width="3.2" stroke-linecap="round" />
+
+            <!-- Textos curvos exteriores e interior -->
+            <text fill="#0F172A" font-family="Inter, sans-serif" font-weight="800" font-size="14.5" letter-spacing="1.1">
+              <textPath href="#hegcTopTextArc" startOffset="50%" text-anchor="middle">HOSPITAL DE NIÑOS</textPath>
+            </text>
+            <text fill="#0F172A" font-family="Inter, sans-serif" font-weight="800" font-size="11.6" letter-spacing="0.5">
+              <textPath href="#hegcBottomTextArc" startOffset="50%" text-anchor="middle">DR. EXEQUIEL GONZALEZ CORTES</textPath>
+            </text>
+            <text fill="#DC2626" font-family="Inter, sans-serif" font-weight="800" font-size="9.6" letter-spacing="0.2">
+              <textPath href="#hegcMottoArc" startOffset="50%" text-anchor="middle">"Comprometidos con la Calidad"</textPath>
+            </text>
+
+            <!-- Sol amarillo con rayos de colores -->
+            <circle cx="100" cy="46" r="7.5" fill="#FACC15" />
+            <path d="M 94 37 Q 92 31 95 28" fill="none" stroke="#0284C7" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M 106 38 Q 111 33 114 35" fill="none" stroke="#EF4444" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M 91 45 Q 84 44 82 47" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M 109 46 Q 116 46 118 49" fill="none" stroke="#F59E0B" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M 95 54 Q 91 59 93 63" fill="none" stroke="#16A34A" stroke-width="2.2" stroke-linecap="round" />
+            <path d="M 104 54 Q 106 60 104 64" fill="none" stroke="#EAB308" stroke-width="2.2" stroke-linecap="round" />
+
+            <!-- Mano protectora beige -->
+            <path d="M 104 92 L 104 68 C 104 61 115 61 116 69 L 117 85 C 134 87 143 102 141 118 C 139 130 124 134 103 134 L 74 135 C 67 135 67 127 74 126 L 63 126 C 55 126 55 117 64 116 L 61 116 C 53 115 54 106 64 106 L 73 105 C 66 103 68 95 77 95 L 104 92 Z" fill="#F3D59B" stroke="#1E293B" stroke-width="2.2" stroke-linejoin="round" />
+            <line x1="74" y1="126" x2="104" y2="125" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="64" y1="116" x2="102" y2="115" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="73" y1="105" x2="100" y2="104" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+
+            <!-- Niño -->
+            <path d="M 73 91 Q 63 93 59 86" fill="none" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <path d="M 93 91 L 106 105" fill="none" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <line x1="78" y1="115" x2="77" y2="126" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <line x1="73" y1="126" x2="79" y2="126" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <line x1="88" y1="115" x2="88" y2="126" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <line x1="88" y1="126" x2="94" y2="126" stroke="#1E293B" stroke-width="2" stroke-linecap="round" />
+            <rect x="74" y="106" width="18" height="10" rx="2" fill="#FACC15" stroke="#1E293B" stroke-width="2" />
+            <path d="M 74 107 C 72 95 76 87 83 87 C 90 87 94 95 92 107 Z" fill="#EC4899" stroke="#1E293B" stroke-width="2" />
+            <circle cx="83" cy="76" r="11" fill="#FDE68A" stroke="#1E293B" stroke-width="2" />
+            <path d="M 75 68 Q 81 62 88 67 Q 82 69 75 68 Z" fill="#0F172A" />
+            <circle cx="76" cy="77" r="2.5" fill="#FFFFFF" opacity="0.85" />
+            <circle cx="90" cy="77" r="2.5" fill="#FFFFFF" opacity="0.85" />
+            <circle cx="80" cy="74" r="1.2" fill="#0F172A" />
+            <circle cx="86" cy="74" r="1.2" fill="#0F172A" />
+            <path d="M 79 80 Q 83 83 87 80" fill="none" stroke="#0F172A" stroke-width="1.6" stroke-linecap="round" />
+
+            <!-- Niña -->
+            <line x1="114" y1="114" x2="112" y2="123" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="108" y1="123" x2="113" y2="123" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="122" y1="114" x2="124" y2="123" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <line x1="124" y1="123" x2="129" y2="123" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <path d="M 124 105 L 132 101" fill="none" stroke="#1E293B" stroke-width="1.8" stroke-linecap="round" />
+            <polygon points="113,102 123,102 128,115 108,115" fill="#EF4444" stroke="#1E293B" stroke-width="1.8" stroke-linejoin="round" />
+            <rect x="104" y="89" width="8" height="4" rx="1.5" fill="#EF4444" stroke="#1E293B" stroke-width="1.4" />
+            <rect x="124" y="89" width="8" height="4" rx="1.5" fill="#EF4444" stroke="#1E293B" stroke-width="1.4" />
+            <circle cx="118" cy="95" r="8" fill="#FDE68A" stroke="#1E293B" stroke-width="1.8" />
+            <circle cx="113" cy="96" r="1.6" fill="#EF4444" />
+            <circle cx="123" cy="96" r="1.6" fill="#EF4444" />
+            <circle cx="116" cy="93.5" r="1.1" fill="#0F172A" />
+            <circle cx="120" cy="93.5" r="1.1" fill="#0F172A" />
+            <path d="M 115.5 98 Q 118 100.5 120.5 98" fill="none" stroke="#0F172A" stroke-width="1.4" stroke-linecap="round" />
+          </svg>
+        </div>
       </div>
     </header>
 
@@ -359,7 +444,7 @@
                 </button>
                 <button type="button" onclick="fillDemoPatient(5)" class="py-1.5 px-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-center transition">
                   <span class="block text-sm">📋</span>
-                  <span class="block text-[10px] font-extrabold text-emerald-900">2 Pisos (2)</span>
+                  <span class="block text-[10px] font-extrabold text-emerald-900">3 Pisos (3)</span>
                 </button>
               </div>
             </div>
@@ -657,7 +742,7 @@
         <path d="M6 16c0-5 2.5-9 6-9s6 4 6 9H6z"/>
         <rect x="5" y="16" width="14" height="3" rx="1"/>
       </g>`,
-      picaflor: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+      colibri: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
         <path d="M14 9l6-2-5 4 2 7-4-4-5 2 2-5-5-4 6 1 3-2z"/>
       </g>`,
       zanahoria: `<g transform="translate(-14,-14) scale(1.15)" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
@@ -829,7 +914,7 @@
           {
             id: 'p2-muestras', name: 'TOMA DE MUESTRAS', x: 196, y: 524, w: 82, h: 40,
             customPath: 'M 196 524 H 278 V 564 H 210 V 532 H 196 Z',
-            iconPos: { x: 244, y: 537 }, textPos: { x: 244, y: 553 }, color: PALETTE.orange, icon: 'picaflor'
+            iconPos: { x: 244, y: 537 }, textPos: { x: 244, y: 553 }, color: PALETTE.orange, icon: 'colibri'
           }
         ]
       },
@@ -976,8 +1061,8 @@
         time: '08:15 hrs',
         specialty: 'Toma de Muestras — Perfil Bioquímico',
         floor: 2,
-        sectorName: 'Sector Picaflor • Toma de Muestras',
-        motif: '🐦 Picaflor (Naranjo — Piso 2)',
+        sectorName: 'Sector Colibrí • Toma de Muestras',
+        motif: '🐦 Colibrí (Naranjo — Piso 2)',
         blockId: 'p2-muestras',
         badgeColor: PALETTE.orange,
         indications: [
@@ -992,7 +1077,7 @@
         steps: [
           'Desde la bahía de <strong>Ascensores Principales</strong> en el Piso 2, avanza hacia el sur por el <strong>Pasillo Principal</strong>.',
           'Pasa frente al sector de <strong>Admisión</strong> y continúa hacia el extremo inferior del pasillo.',
-          'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Picaflor</strong>).'
+          'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Colibrí</strong>).'
         ],
         tip: 'El Piso 2 corresponde a la entrada principal del hospital; Toma de Muestras queda en la esquina inferior derecha del plano.'
       },
@@ -1092,39 +1177,13 @@
         name: 'Benjamín Andrés Valdés Muñoz',
         age: '10 años',
         date: 'Jueves 26 Nov',
-        time: '2 citaciones',
+        time: '3 citaciones',
         exams: [
           {
-            id: 'exam-p2',
+            id: 'exam-p1',
             status: 'realizada',
             date: 'Jueves 26 Nov',
             time: '08:30 hrs',
-            specialty: 'Toma de Muestras — Hemograma y Perfil',
-            floor: 2,
-            sectorName: 'Sector Picaflor • Toma de Muestras',
-            motif: '🐦 Picaflor (Naranjo — Piso 2)',
-            blockId: 'p2-muestras',
-            badgeColor: PALETTE.orange,
-            indications: [
-              'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
-              'Atención ya realizada hoy a las 08:30 hrs. Resultados disponibles en ficha clínica electrónica.'
-            ],
-            documents: [
-              'Orden médica física impresa y firmada por el médico tratante.',
-              'Comprobante de toma de muestras entregado en recepción.'
-            ],
-            steps: [
-              'Desde los <strong>Ascensores Principales</strong> en el Piso 2, avanza hacia el sur por el <strong>Pasillo Principal</strong>.',
-              'Pasa frente a <strong>Admisión</strong> y continúa hasta el extremo inferior del pasillo.',
-              'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Picaflor</strong>).'
-            ],
-            tip: 'Esta atención ambulatoria ya fue realizada en el Piso 2 (Sector Picaflor).'
-          },
-          {
-            id: 'exam-p1',
-            status: 'pendiente',
-            date: 'Jueves 26 Nov',
-            time: '10:15 hrs',
             specialty: 'Imagenología — Radiografía de Tórax',
             floor: 1,
             sectorName: 'Sector Foca • Imagenología',
@@ -1133,18 +1192,70 @@
             badgeColor: PALETTE.purple,
             indications: [
               'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
-              'Vestir ropa cómoda sin broches metálicos, cierres ni cadenas en la zona del pecho.'
+              'Atención ya realizada hoy a las 08:30 hrs. Imágenes disponibles en ficha clínica electrónica.'
             ],
             documents: [
               'Orden médica física impresa y firmada por el médico tratante.',
-              'Cédula de identidad del paciente y del adulto responsable acompañante.'
+              'Comprobante de atención entregado en recepción de Imagenología.'
             ],
             steps: [
               'Baja al <strong>Piso 1</strong> utilizando los <strong>Ascensores Principales</strong>.',
               'Al salir al <strong>Pasillo Principal</strong>, avanza hacia el sur bordeando los patios de luz.',
               'Ingresa al bloque morado de <strong>Imagenología</strong> (ícono de <strong>Foca</strong>), ubicado justo sobre Emergencia.'
             ],
-            tip: 'En el Piso 1 sigue la señalética morada con el ícono de Foca para llegar a Imagenología.'
+            tip: 'Esta atención ambulatoria ya fue realizada en el Piso 1 (Sector Foca).'
+          },
+          {
+            id: 'exam-p2',
+            status: 'pendiente',
+            date: 'Jueves 26 Nov',
+            time: '10:15 hrs',
+            specialty: 'Toma de Muestras — Hemograma y Perfil',
+            floor: 2,
+            sectorName: 'Sector Colibrí • Toma de Muestras',
+            motif: '🐦 Colibrí (Naranjo — Piso 2)',
+            blockId: 'p2-muestras',
+            badgeColor: PALETTE.orange,
+            indications: [
+              'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
+              'Mantener ayuno de 8 horas (o según indicación médica) y vestir ropa de manga corta o fácil de subir.'
+            ],
+            documents: [
+              'Orden médica física impresa y firmada por el médico tratante.',
+              'Cédula de identidad del paciente y del adulto responsable acompañante.'
+            ],
+            steps: [
+              'Desde los <strong>Ascensores Principales</strong> en el Piso 2, avanza hacia el sur por el <strong>Pasillo Principal</strong>.',
+              'Pasa frente a <strong>Admisión</strong> y continúa hasta el extremo inferior del pasillo.',
+              'Encontrarás <strong>Toma de Muestras</strong> en el bloque naranjo inferior (ícono de <strong>Colibrí</strong>).'
+            ],
+            tip: 'En el Piso 2 busca la señalética naranjo con el ícono de Colibrí en la esquina inferior derecha del plano.'
+          },
+          {
+            id: 'exam-p3',
+            status: 'pendiente',
+            date: 'Jueves 26 Nov',
+            time: '11:30 hrs',
+            specialty: 'Cardiología Infantil — Electrocardiograma (ECG)',
+            floor: 3,
+            sectorName: 'Sector Zanahoria • Cardiología Infantil',
+            motif: '🥕 Zanahoria (Azul — Piso 3)',
+            blockId: 'p3-cardio',
+            badgeColor: PALETTE.blue,
+            indications: [
+              'Llegar 15 minutos antes y anunciarse en mesón de recepción de la unidad.',
+              'No aplicar cremas ni aceites en el pecho antes del examen para asegurar buena fijación de los electrodos.'
+            ],
+            documents: [
+              'Orden médica física impresa y firmada por el médico tratante.',
+              'Cédula de identidad del paciente y del adulto responsable acompañante.'
+            ],
+            steps: [
+              'Sube al <strong>Piso 3</strong> mediante los <strong>Ascensores Principales</strong>.',
+              'Camina hacia el norte por el <strong>Pasillo Principal</strong> pasando junto a los patios de luz.',
+              'Al llegar al extremo superior del piso verás el bloque azul de <strong>Cardiología Infantil</strong> (ícono de <strong>Zanahoria</strong>).'
+            ],
+            tip: 'En el Piso 3 busca la señalética azul con el ícono de Zanahoria en el extremo superior del plano.'
           }
         ]
       }
