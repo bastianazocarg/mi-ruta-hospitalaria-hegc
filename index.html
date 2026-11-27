@@ -60,6 +60,32 @@
       animation: pulseMarker 1.8s infinite ease-in-out;
     }
 
+    /* Animación progresiva de relleno de la ruta hacia el destino */
+    @keyframes routeMaskDraw {
+      0% {
+        stroke-dashoffset: var(--route-len, 400);
+        opacity: 1;
+      }
+      58% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      88% {
+        stroke-dashoffset: 0;
+        opacity: 1;
+      }
+      98%, 100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
+    }
+
+    .route-mask-line {
+      stroke-dasharray: var(--route-len, 400);
+      stroke-dashoffset: var(--route-len, 400);
+      animation: routeMaskDraw 3.6s cubic-bezier(0.25, 0.85, 0.35, 1) infinite;
+    }
+
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
@@ -510,7 +536,7 @@
               📋 Exámenes y Atenciones del Día
             </h3>
             <span id="multi-exams-count" class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-slate-100 text-slate-600">
-              2 pisos
+              3 pisos
             </span>
           </div>
 
@@ -632,7 +658,7 @@
           </button>
         </div>
 
-        <!-- Plano arquitectónico SVG del piso -->
+        <!-- Plano arquitectónico SVG del piso (incluye Gran Avenida estilo Google Maps) -->
         <div class="bg-white rounded-2xl p-2.5 shadow-md border border-slate-200">
           <div id="map-svg-wrapper" class="w-full rounded-xl overflow-hidden bg-slate-900"></div>
         </div>
@@ -1646,40 +1672,86 @@
       const elev = floor.mainElevator;
       const corridorCenterX = 302;
 
-      const routeOverlaySVG = targetArrival ? `
-        <!-- Línea punteada amarilla desde Ascensores Principales hasta el destino -->
-        <polyline
-          points="${elev.x},${elev.y} ${corridorCenterX},${elev.y} ${corridorCenterX},${targetArrival.y} ${targetArrival.x},${targetArrival.y}"
-          fill="none"
-          stroke="#FACC15"
-          stroke-width="3.6"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-dasharray="7 5"
-        />
+      let routeOverlaySVG = '';
+      if (targetArrival) {
+        const routePoints = `${elev.x},${elev.y} ${corridorCenterX},${elev.y} ${corridorCenterX},${targetArrival.y} ${targetArrival.x},${targetArrival.y}`;
+        const seg1 = Math.abs(corridorCenterX - elev.x);
+        const seg2 = Math.abs(targetArrival.y - elev.y);
+        const seg3 = Math.abs(targetArrival.x - corridorCenterX);
+        const totalRouteLen = Math.ceil(seg1 + seg2 + seg3) + 6;
+        const maskId = `route-fill-mask-${floor.num}-${targetBlockId}`;
 
-        <!-- Marcador de ubicación y etiqueta elevada "tu destino" al final de la ruta -->
-        <g transform="translate(${targetArrival.x}, ${targetArrival.y})">
-          <g class="pulse-dest">
-            <ellipse cx="0" cy="1.5" rx="6.5" ry="2.5" fill="rgba(0,0,0,0.38)"/>
-            <path d="M 0 0 C -7.5 -10 -14 -16.5 -14 -24 A 14 14 0 1 1 14 -24 C 14 -16.5 7.5 -10 0 0 Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="2.1"/>
-            <circle cx="0" cy="-24" r="5.2" fill="#FFFFFF"/>
+        routeOverlaySVG = `
+          <defs>
+            <mask id="${maskId}" maskUnits="userSpaceOnUse" x="0" y="-40" width="390" height="700">
+              <polyline
+                points="${routePoints}"
+                fill="none"
+                stroke="#FFFFFF"
+                stroke-width="10"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                class="route-mask-line"
+                style="--route-len: ${totalRouteLen}px;"
+              />
+            </mask>
+          </defs>
 
-            <!-- Cápsula elevada con borde negro y texto blanco más grande -->
-            <g transform="translate(0, -45)">
-              <rect x="-43" y="-19" width="86" height="22" rx="7" fill="#0F172A" stroke="#000000" stroke-width="2"/>
-              <text x="0" y="-4" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="12px" letter-spacing="0.2">tu destino</text>
+          <!-- Guía base punteada tenue del recorrido completo -->
+          <polyline
+            points="${routePoints}"
+            fill="none"
+            stroke="#FACC15"
+            stroke-opacity="0.28"
+            stroke-width="3.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-dasharray="7 5"
+          />
+
+          <!-- Línea punteada amarilla animada que se va rellenando hasta el destino -->
+          <polyline
+            points="${routePoints}"
+            fill="none"
+            stroke="#FACC15"
+            stroke-width="3.8"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-dasharray="7 5"
+            mask="url(#${maskId})"
+          />
+
+          <!-- Marcador de ubicación y etiqueta elevada "tu destino" al final de la ruta -->
+          <g transform="translate(${targetArrival.x}, ${targetArrival.y})">
+            <g class="pulse-dest">
+              <ellipse cx="0" cy="1.5" rx="6.5" ry="2.5" fill="rgba(0,0,0,0.38)"/>
+              <path d="M 0 0 C -7.5 -10 -14 -16.5 -14 -24 A 14 14 0 1 1 14 -24 C 14 -16.5 7.5 -10 0 0 Z" fill="#EF4444" stroke="#FFFFFF" stroke-width="2.1"/>
+              <circle cx="0" cy="-24" r="5.2" fill="#FFFFFF"/>
+
+              <!-- Cápsula elevada con borde negro y texto blanco más grande -->
+              <g transform="translate(0, -45)">
+                <rect x="-54" y="-17" width="108" height="32" rx="10" fill="#0F172A" stroke="#000000" stroke-width="2.6"/>
+                <text x="0" y="3.5" text-anchor="middle" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="900" font-size="14px" letter-spacing="0.3">tu destino</text>
+              </g>
             </g>
           </g>
-        </g>
-      ` : '';
+        `;
+      }
 
-      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 390 660" class="w-full h-auto block select-none">
+      return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -40 390 700" class="w-full h-auto block select-none">
         <!-- Tablero exterior azul pizarra oscuro -->
-        <rect x="0" y="0" width="390" height="660" rx="16" fill="${PALETTE.board}" />
+        <rect x="0" y="-40" width="390" height="700" rx="16" fill="${PALETTE.board}" />
 
         <!-- Encabezado superior del tablero -->
-        <text x="24" y="21" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11.5px" letter-spacing="0.4">${escapeXML(floor.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
+        <text x="24" y="-19" fill="#FFFFFF" font-family="Inter, sans-serif" font-weight="800" font-size="11.5px" letter-spacing="0.4">${escapeXML(floor.title)} — HOSPITAL DR. EXEQUIEL GONZÁLEZ CORTÉS</text>
+
+        <!-- Calle Gran Avenida estilo Google Maps dentro del mapa -->
+        <g>
+          <rect x="20" y="-10" width="350" height="19" rx="4" fill="#E2E8F0" stroke="#94A3B8" stroke-width="1" />
+          <line x1="28" y1="-0.5" x2="64" y2="-0.5" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5 4" />
+          <line x1="326" y1="-0.5" x2="362" y2="-0.5" stroke="#94A3B8" stroke-width="1" stroke-dasharray="5 4" />
+          <text x="195" y="2.6" text-anchor="middle" fill="#1E293B" font-family="Inter, sans-serif" font-weight="800" font-size="8.5px" letter-spacing="0.2">Gran Avenida José Miguel Carrera 3300, San Miguel</text>
+        </g>
 
         <!-- Marco arquitectónico blanco interior -->
         <path d="${floor.perimeterOuter}" fill="#F8FAFC" stroke="#0F172A" stroke-width="2" />
@@ -1704,7 +1776,7 @@
         <!-- Ascensores secundarios -->
         ${secElevSVG}
 
-        <!-- Ruta punteada amarilla + pin de ubicación + "tu destino" -->
+        <!-- Ruta punteada amarilla animada + pin de ubicación + "tu destino" -->
         ${routeOverlaySVG}
 
         <!-- Marcador destacado de ASCENSORES PRINCIPALES -->
